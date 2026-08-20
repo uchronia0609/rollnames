@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>随机名字生成器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f9f3e8 0%, #ffe8d6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            padding: 16px;
+            margin: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            gap: 16px;
+            align-items: stretch;
+            height: 90vh;
+            max-height: 720px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 18px 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left-panel {
+            flex: 1;
+            gap: 8px;
+            justify-content: flex-start;
+            padding-top: 8px;
+        }
+
+        .left-panel .section-label {
+            font-size: 0.85rem;
+            color: #ab8c78;
+            letter-spacing: 3px;
+            margin-bottom: 2px;
+        }
+
+        .style-select-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .style-select-row select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e8ddd0;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            background: white;
+            outline: none;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            color: #3e2c1f;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .style-select-row select:focus {
+            border-color: #e07a3f;
+        }
+
+        .style-select-row .style-hint {
+            font-size: 0.6rem;
+            color: #b8a08a;
+            white-space: nowrap;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .mode-group {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            flex: 1;
+            min-width: 50px;
+            padding: 8px 0;
+            border: 2px solid #e8ddd0;
+            border-radius: 30px;
+            background: transparent;
+            color: #7a6556;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            border-color: #c9b8a8;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .mode-btn.active {
+            border-color: #e07a3f;
+            background: #e07a3f;
+            color: white;
+            box-shadow: 0 4px 12px rgba(224, 122, 63, 0.3);
+        }
+
+        .mode-btn.active:hover {
+            background: #d06a2f;
+        }
+
+        .mode-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .fixed-section {
+            transition: opacity 0.25s ease, max-height 0.25s ease;
+            overflow: hidden;
+        }
+
+        .fixed-section.hidden {
+            opacity: 0;
+            max-height: 0;
+            margin: 0;
+            padding: 0;
+            pointer-events: none;
+        }
+
+        .fixed-section .section-label {
+            font-size: 0.85rem;
+            color: #ab8c78;
+            letter-spacing: 3px;
+            margin-bottom: 2px;
+        }
+
+        .fixed-surname-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .fixed-surname-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e8ddd0;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            text-align: center;
+            letter-spacing: 1px;
+            max-width: 110px;
+        }
+
+        .fixed-surname-row input:focus {
+            border-color: #e07a3f;
+        }
+
+        .fixed-surname-row input::placeholder {
+            color: #ccc;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .fixed-surname-row .confirm-btn {
+            background: #e07a3f;
+            border: none;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            transition: all 0.12s;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .fixed-surname-row .confirm-btn:hover {
+            background: #c96932;
+        }
+
+        .fixed-surname-row .confirm-btn:active {
+            transform: scale(0.95);
+        }
+
+        .fixed-surname-row .clear-btn {
+            background: #e8ddd0;
+            border: none;
+            color: #7a6556;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            transition: all 0.12s;
+            white-space: nowrap;
+        }
+
+        .fixed-surname-row .clear-btn:hover {
+            background: #d5c8b8;
+        }
+
+        .fixed-status {
+            font-size: 0.75rem;
+            color: #b8a08a;
+            min-height: 18px;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .fixed-status.active {
+            color: #e07a3f;
+        }
+
+        .fixed-char-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 2px;
+            flex-wrap: wrap;
+        }
+
+        .fixed-char-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e8ddd0;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            text-align: center;
+            letter-spacing: 1px;
+            max-width: 60px;
+        }
+
+        .fixed-char-row input:focus {
+            border-color: #e07a3f;
+        }
+
+        .fixed-char-row input::placeholder {
+            color: #ccc;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .fixed-char-row select {
+            padding: 6px 8px;
+            border: 2px solid #e8ddd0;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            background: white;
+            outline: none;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            color: #5a4a3a;
+            cursor: pointer;
+        }
+
+        .fixed-char-row select:focus {
+            border-color: #e07a3f;
+        }
+
+        .fixed-char-row .confirm-btn {
+            background: #4a8a7a;
+            border: none;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            transition: all 0.12s;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .fixed-char-row .confirm-btn:hover {
+            background: #3a7a6a;
+        }
+
+        .fixed-char-row .confirm-btn:active {
+            transform: scale(0.95);
+        }
+
+        .fixed-char-row .clear-btn {
+            background: #e8ddd0;
+            border: none;
+            color: #7a6556;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            transition: all 0.12s;
+            white-space: nowrap;
+        }
+
+        .fixed-char-row .clear-btn:hover {
+            background: #d5c8b8;
+        }
+
+        .fixed-char-status {
+            font-size: 0.75rem;
+            color: #b8a08a;
+            min-height: 18px;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .fixed-char-status.active {
+            color: #4a8a7a;
+        }
+
+        .btn-gen {
+            background: #e07a3f;
+            border: none;
+            color: white;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+            padding: 12px 0;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 12px 20px -10px #c15f2a, 0 4px 0 #8f421a;
+            transition: all 0.12s ease;
+            border: 2px solid #ffc9a3;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-gen:active {
+            transform: translateY(4px);
+            box-shadow: 0 6px 12px -6px #b9552a, 0 2px 0 #7a3517;
+        }
+
+        .btn-gen:hover {
+            background: #e9894f;
+        }
+
+        .btn-gen .icon {
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 1px;
+        }
+        .btn-gen .count-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .status-hint {
+            font-size: 0.75rem;
+            color: #b8a08a;
+            text-align: center;
+            letter-spacing: 1px;
+            margin-top: -2px;
+            min-height: 20px;
+        }
+
+        .center-panel {
+            flex: 1;
+        }
+
+        .result-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 8px 4px 4px;
+        }
+
+        .result-box::-webkit-scrollbar {
+            width: 5px;
+        }
+        .result-box::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .result-box::-webkit-scrollbar-thumb {
+            background: #d5c8b8;
+            border-radius: 10px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0e8e0;
+            flex-shrink: 0;
+        }
+
+        .result-header .title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #5a4a3a;
+            letter-spacing: 2px;
+        }
+
+        .result-header .badge {
+            background: #e8ddd0;
+            padding: 2px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #5a4a3a;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 12px;
+            border: 1px solid #f0e8e0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: all 0.12s;
+            text-align: center;
+        }
+
+        .result-item:hover {
+            transform: scale(1.02);
+            border-color: #e07a3f;
+        }
+
+        .result-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #3e2c1f;
+            letter-spacing: 3px;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        .result-lineage {
+            font-size: 0.6rem;
+            color: #8a7a6a;
+            margin-top: 3px;
+            letter-spacing: 0.5px;
+            border-top: 1px dashed #f0e8e0;
+            padding-top: 3px;
+        }
+
+        .result-empty {
+            color: #b8a08a;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 50px 0;
+            letter-spacing: 2px;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        .right-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            transition: opacity 0.3s ease;
+        }
+
+        .right-panel.hidden {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .right-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .right-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .right-panel::-webkit-scrollbar-thumb {
+            background: #d5c8b8;
+            border-radius: 10px;
+        }
+
+        .right-panel .panel-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #5a4a3a;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #f0e8e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .right-panel .panel-title .close-toggle {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #b8a08a;
+            padding: 0 6px;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        .right-panel .panel-title .close-toggle:hover {
+            color: #d45a3a;
+        }
+
+        .lib-section {
+            margin-bottom: 14px;
+        }
+
+        .lib-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .lib-section .lib-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #7a6556;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .lib-section .lib-label .count {
+            background: #e8ddd0;
+            padding: 0 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #5a4a3a;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+            max-height: 68px;
+            overflow-y: auto;
+            padding: 2px 0;
+        }
+
+        .tag-list::-webkit-scrollbar {
+            width: 3px;
+        }
+        .tag-list::-webkit-scrollbar-thumb {
+            background: #d5c8b8;
+            border-radius: 10px;
+        }
+
+        .tag {
+            background: #f5ede6;
+            padding: 2px 8px 2px 10px;
+            border-radius: 14px;
+            font-size: 0.82rem;
+            color: #3e2c1f;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            border: 1px solid #e8ddd0;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        .tag .del-btn {
+            background: none;
+            border: none;
+            color: #b8a08a;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 0 2px;
+            border-radius: 50%;
+            line-height: 1;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        .tag .del-btn:hover {
+            color: #d45a3a;
+        }
+
+        .add-row-sm {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .add-row-sm input {
+            flex: 1;
+            padding: 4px 10px;
+            border: 1.5px solid #e8ddd0;
+            border-radius: 18px;
+            font-size: 0.82rem;
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            min-width: 0;
+            width: 56px;
+        }
+
+        .add-row-sm input:focus {
+            border-color: #e07a3f;
+        }
+
+        .add-row-sm button {
+            background: #e07a3f;
+            border: none;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 18px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.12s;
+            font-weight: 600;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            white-space: nowrap;
+        }
+
+        .add-row-sm button:hover {
+            background: #c96932;
+        }
+
+        .add-row-sm button:active {
+            transform: scale(0.95);
+        }
+
+        .lib-hint {
+            font-size: 0.65rem;
+            color: #b8a08a;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .lib-reset {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #f0e8e0;
+            text-align: center;
+        }
+
+        .lib-reset button {
+            background: #e8ddd0;
+            border: none;
+            color: #5a4a3a;
+            padding: 4px 16px;
+            border-radius: 18px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.12s;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        .lib-reset button:hover {
+            background: #f0d0c8;
+            color: #b8452a;
+        }
+
+        .right-panel .panel-hint {
+            font-size: 0.7rem;
+            color: #b8a08a;
+            text-align: center;
+            padding: 20px 0;
+            letter-spacing: 1px;
+            display: none;
+        }
+
+        .right-panel .panel-hint.show {
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                max-height: none;
+                gap: 12px;
+            }
+            .panel {
+                max-height: none;
+                padding: 14px 12px;
+            }
+            .left-panel {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 6px;
+                padding: 10px 12px;
+            }
+            .left-panel .section-label {
+                display: none;
+            }
+            .style-select-row {
+                flex: 1;
+                min-width: 140px;
+            }
+            .style-select-row select {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+            .style-select-row .style-hint {
+                display: none;
+            }
+            .fixed-surname-row input {
+                max-width: 80px;
+                padding: 6px 8px;
+                font-size: 0.85rem;
+            }
+            .fixed-char-row input {
+                max-width: 50px;
+                padding: 6px 8px;
+                font-size: 0.85rem;
+            }
+            .fixed-char-row select {
+                font-size: 0.7rem;
+                padding: 5px 6px;
+            }
+            .mode-group {
+                flex: 1;
+                min-width: 160px;
+            }
+            .mode-btn {
+                font-size: 0.75rem;
+                padding: 6px 0;
+                min-width: 40px;
+            }
+            .btn-gen {
+                max-width: 100px;
+                padding: 8px 0;
+                font-size: 0.9rem;
+            }
+            .btn-gen .icon {
+                font-size: 0.9rem;
+            }
+            .right-panel {
+                max-height: 340px;
+            }
+            .result-box {
+                max-height: 400px;
+            }
+            .result-grid {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            }
+            .result-item {
+                padding: 6px 8px;
+            }
+            .result-name {
+                font-size: 0.95rem;
+                letter-spacing: 2px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .panel {
+                padding: 10px 8px;
+                border-radius: 18px;
+            }
+            .left-panel {
+                gap: 4px;
+                padding: 8px 6px;
+            }
+            .style-select-row select {
+                font-size: 0.7rem;
+                padding: 5px 8px;
+            }
+            .fixed-surname-row input {
+                max-width: 60px;
+                padding: 4px 6px;
+                font-size: 0.8rem;
+            }
+            .fixed-surname-row .confirm-btn {
+                padding: 4px 10px;
+                font-size: 0.7rem;
+            }
+            .fixed-surname-row .clear-btn {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+            .fixed-char-row input {
+                max-width: 40px;
+                padding: 4px 6px;
+                font-size: 0.8rem;
+            }
+            .fixed-char-row select {
+                font-size: 0.6rem;
+                padding: 4px 4px;
+                max-width: 60px;
+            }
+            .fixed-char-row .confirm-btn {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+            .fixed-char-row .clear-btn {
+                padding: 4px 6px;
+                font-size: 0.6rem;
+            }
+            .mode-btn {
+                font-size: 0.65rem;
+                padding: 4px 0;
+                min-width: 32px;
+            }
+            .btn-gen {
+                max-width: 70px;
+                padding: 6px 0;
+                font-size: 0.75rem;
+            }
+            .btn-gen .icon {
+                font-size: 0.7rem;
+            }
+            .right-panel {
+                max-height: 260px;
+                padding: 10px 8px;
+            }
+            .result-box {
+                max-height: 300px;
+                padding: 2px 4px;
+            }
+            .result-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 4px;
+            }
+            .result-item {
+                padding: 4px 6px;
+            }
+            .result-name {
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+            }
+            .result-lineage {
+                font-size: 0.5rem;
+            }
+            .result-header .title {
+                font-size: 0.7rem;
+            }
+            .result-header .badge {
+                font-size: 0.6rem;
+                padding: 1px 10px;
+            }
+            .tag {
+                font-size: 0.7rem;
+                padding: 1px 6px 1px 8px;
+            }
+            .add-row-sm input {
+                font-size: 0.7rem;
+                padding: 3px 6px;
+                width: 36px;
+            }
+            .add-row-sm button {
+                font-size: 0.65rem;
+                padding: 3px 8px;
+            }
+            .lib-section {
+                margin-bottom: 8px;
+            }
+            .lib-section .lib-label {
+                font-size: 0.7rem;
+            }
+            .tag-list {
+                max-height: 48px;
+            }
+            .status-hint {
+                font-size: 0.6rem;
+                min-height: 16px;
+            }
+            .fixed-status {
+                font-size: 0.6rem;
+            }
+            .fixed-char-status {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ===== 左栏 ===== -->
+        <div class="panel left-panel">
+            <div class="section-label">风 格</div>
+            <div class="style-select-row">
+                <select id="styleSelect">
+                    <option value="general">通用</option>
+                    <option value="ming">明朝宗室</option>
+                    <option value="sanguo">三国两晋</option>
+                    <option value="gufeng">古风女性</option>
+                </select>
+                <span class="style-hint" id="styleHint">自由组合</span>
+            </div>
+
+            <div class="section-label" id="modeLabel">模 式</div>
+            <div class="mode-group" id="modeGroup">
+                <button class="mode-btn" data-mode="single">单字名</button>
+                <button class="mode-btn active" data-mode="random">随机</button>
+                <button class="mode-btn" data-mode="double">双字名</button>
+            </div>
+
+            <div class="fixed-section" id="fixedSection">
+                <div class="section-label">固 定 姓 氏</div>
+                <div class="fixed-surname-row">
+                    <input type="text" id="fixedSurnameInput" placeholder="姓" maxlength="5">
+                    <button class="confirm-btn" id="confirmSurnameBtn">确认</button>
+                    <button class="clear-btn" id="clearSurnameBtn">清除</button>
+                </div>
+                <div class="fixed-status" id="fixedStatus">未设置固定姓氏</div>
+
+                <div class="section-label" style="margin-top:2px;">固 定 中 间 / 末 尾 字</div>
+                <div class="fixed-char-row">
+                    <input type="text" id="fixedCharInput" placeholder="字" maxlength="1">
+                    <select id="fixedCharPosition">
+                        <option value="middle">中间字</option>
+                        <option value="end">末尾字</option>
+                    </select>
+                    <button class="confirm-btn" id="confirmCharBtn">确认</button>
+                    <button class="clear-btn" id="clearCharBtn">清除</button>
+                </div>
+                <div class="fixed-char-status" id="fixedCharStatus">未设置固定字</div>
+            </div>
+
+            <div class="status-hint" id="statusHint"></div>
+
+            <div style="flex:1; min-height:4px;"></div>
+
+            <button class="btn-gen" id="btnGen1">
+                <span class="icon">🎲</span>
+                <span class="count-label">1 个</span>
+            </button>
+            <button class="btn-gen" id="btnGen10">
+                <span class="icon">📋</span>
+                <span class="count-label">10 个</span>
+            </button>
+            <button class="btn-gen" id="btnGen50">
+                <span class="icon">📋</span>
+                <span class="count-label">50 个</span>
+            </button>
+        </div>
+
+        <!-- ===== 中栏 ===== -->
+        <div class="panel center-panel">
+            <div class="result-header">
+                <span class="title">📝 生成结果</span>
+                <span class="badge" id="resultBadge">0 个</span>
+            </div>
+            <div class="result-box" id="resultBox">
+                <div class="result-grid" id="resultGrid">
+                    <div class="result-empty">点击左侧按钮生成名字</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 右栏 ===== -->
+        <div class="panel right-panel" id="libPanel">
+            <div class="panel-title">
+                <span>📂 字库管理</span>
+                <button class="close-toggle" id="libToggle">▾</button>
+            </div>
+            <div class="panel-hint" id="panelHint"></div>
+
+            <div class="lib-section" id="libSurname">
+                <div class="lib-label">
+                    <span>👤 姓氏</span>
+                    <span class="count" id="surnameCount">0</span>
+                </div>
+                <div class="tag-list" id="surnameContainer"></div>
+                <div class="add-row-sm">
+                    <input type="text" id="surnameInput" placeholder="加" maxlength="1">
+                    <button onclick="addSurname()">添加</button>
+                </div>
+            </div>
+
+            <div class="lib-section" id="libSecond">
+                <div class="lib-label">
+                    <span>📝 第二字</span>
+                    <span class="count" id="secondCount">0</span>
+                </div>
+                <div class="tag-list" id="secondContainer"></div>
+                <div class="add-row-sm">
+                    <input type="text" id="secondInput" placeholder="加" maxlength="1">
+                    <button onclick="addSecond()">添加</button>
+                </div>
+            </div>
+
+            <div class="lib-section" id="libThird">
+                <div class="lib-label">
+                    <span>📝 第三字</span>
+                    <span class="count" id="thirdCount">0</span>
+                </div>
+                <div class="tag-list" id="thirdContainer"></div>
+                <div class="add-row-sm">
+                    <input type="text" id="thirdInput" placeholder="加" maxlength="1">
+                    <button onclick="addThird()">添加</button>
+                </div>
+            </div>
+
+            <div class="lib-section" id="libFixed">
+                <div class="lib-label">
+                    <span>🔗 固定搭配</span>
+                    <span class="count" id="fixedCount">0</span>
+                </div>
+                <div class="tag-list" id="fixedContainer"></div>
+                <div class="add-row-sm">
+                    <input type="text" id="fixedInput" placeholder="加" maxlength="2">
+                    <button onclick="addFixed()">添加</button>
+                </div>
+                <div class="lib-hint">💡 如：子涵、梓轩、俊杰、佳怡</div>
+            </div>
+
+            <div class="lib-reset">
+                <button onclick="resetAll()">重置所有字库</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        //  古风女性字库（默认数据，可编辑）
+        // ============================================================
+        const GU_FENG_DEFAULT_CHARS = [
+            '晚', '羽', '昕', '娇', '冰', '舒', '蕾', '一', '白', '涵', '素', '采',
+            '婉', '瑜', '容', '媛', '思', '漱', '蕊', '衣', '应', '寒', '樱', '彩',
+            '佑', '雨', '蓉', '妙', '丝', '疏', '睿', '逸', '颖', '菡', '贤', '安',
+            '宛', '语', '萱', '婧', '似', '明', '瑞', '依', '瑛', '函', '仙', '弗',
+            '挽', '玉', '璇', '媚', '香', '和', '芮', '然', '盈', '晗', '羡', '芙',
+            '清', '郁', '瑄', '娴', '湘', '鹤', '茜', '苒', '迎', '琀', '雾', '霓',
+            '青', '钰', '芝', '梅', '南', '禾', '芸', '谊', '莹', '霖', '丹', '稚',
+            '轻', '颜', '之', '落', '诗', '荷', '茹', '嫦', '毓', '文', '淡', '未',
+            '晴', '燕', '枝', '洛', '嬛', '涟', '苹', '妤', '桃', '雯', '瞳', '微',
+            '卿', '言', '知', '萝', '紫', '莲', '蔚', '媞', '兰', '玟', '童', '桉',
+            '温', '宴', '夏', '玲', '梓', '花', '凌', '酒', '锦', '纹', '彤', '朝',
+            '凝', '妍', '春', '珠', '子', '药', '灵', '深', '近', '墨', '桐', '敏',
+            '宁', '烟', '椿', '瑾', '蕙', '苏', '令', '洁', '今', '茉', '沛', '珉',
+            '柠', '雅', '秋', '珍', '徽', '英', '陵', '润', '曦', '沫', '佩', '琅',
+            '映', '娅', '慕', '琪', '惠', '若', '菱', '星', '夕', '良', '璟', '珺',
+            '君', '由', '木', '环', '眉', '蓝', '翎', '荇', '汐', '凉', '静', '瑰',
+            '秀', '幽', '沐', '璃', '庄', '萌', '怡', '杏', '熙', '靓', '京', '玫',
+            '绣', '幼', '暮', '珊', '娆', '芳', '苓', '舞', '希', '霞', '净', '莓',
+            '修', '软', '糖', '璐', '姚', '艾', '龄', '儿', '溪', '瑶', '茗',
+            '袖', '染', '棠', '琦', '婕', '萍', '铃', '妩', '兮', '遥', '彻',
+            '月', '可', '好', '玖', '嫣', '菲', '绫', '云', '惜', '盼', '元',
+            '悦', '欣', '如', '离', '姗', '芬', '意', '允', '融', '音', '颐',
+            '仪', '心', '婷', '莉', '娥', '恩', '宜', '韵', '绒', '吟', '窈',
+            '伊', '歆', '娜', '栗', '姣', '薇', '懿', '昀', '荣', '绘', '琬',
+            '艺', '芯', '娟', '书', '淑', '莎', '奕', '红', '榕', '韶', '菀',
+            '亦', '馨', '妮', '美', '菊', '以', '筠', '含', '华', '绾'
+        ];
+
+        // ============================================================
+        //  三国两晋数据
+        // ============================================================
+
+        const SAN_GUO_SURNAMES = [
+            '王', '曹', '孙', '刘', '夏侯', '董', '郭', '荀', '诸葛', '伊', '程', '顾', '陆', '朱', '张', '周', '吕', '李',
+            '傅', '徐', '许', '司马', '邓', '陈', '马', '裴', '杨', '袁', '鲁', '郝', '赵', '高堂', '凌', '甘', '黄', '关',
+            '骆', '丁', '毌丘', '唐', '仓', '阚', '辛', '卞', '于', '钟', '韩', '史', '文', '羊', '庞', '杜', '嵇', '毛',
+            '陶', '胡', '蒯', '娄', '魏', '国', '桓', '田', '华', '蔡', '贾', '向', '宗', '成', '焦', '蒋', '牵', '乐',
+            '廖', '沮', '公孙', '严', '费', '法', '高', '卢', '左', '孔', '秦', '阎', '潘', '鲍', '简', '贺', '卫', '步',
+            '糜', '麹', '颜', '谯', '来', '霍', '吴', '虞', '全', '濮阳', '和', '温', '简', '彭', '宗', '是', '钟离'
+        ];
+
+        const SAN_GUO_GIVEN = [
+         '操', '丕', '植', '嘉', '玄', '云', '羽', '懿', '辽', '籍', '昱', '雍', '逊', '然', '昭', '瑜', '恪', '瑾', '儒', '尚', '褚', '仁', '渊', '韦', '毓', '彧', '晃', '郃', '艾', '典', '宫', '群', '谌', '超', '秀', '修', '肃', '师', '干', '芝', '隆', '协', '奕', '忠', '宁', '统', '奉', '机', '盛', '荣', '卓', '节', '衡', '丰', '整', '虔', '慈', '邈', '洪', '叡', '辩', '瓒', '康', '攸', '诩', '髦', '茂', '颙', '泽', '禁', '会', '宠', '冲', '淮', '真', '浩', '涣', '繇', '资', '放', '诞', '昂', '进', '聘', '朗', '术', '恕', '济', '畿', '恭', '玠', '晔', '灵', '谦', '班', '霸', '纯', '钧', '金', '越', '良', '圭', '昶', '范', '楷', '爽', '羲', '豫', '粲', '歆', '双', '琰', '燕', '休', '彰', '琳', '逵', '嵩', '业', '经', '孚', '阜', '既', '伯', '招', '咨', '延', '维', '禅', '颜', '瞻', '到', '祎', '琬', '靖', '备', '飞', '亮', '正', '谡', '兴', '苞', '化', '封', '泰', '赞', '权', '策', '盖', '坚', '蒙', '温', '钦', '当', '普', '璋', '治', '登', '综', '基', '绩', '齐', '骘', '濬', '岱', '畯', '芳', '抗', '韶', '峻', '綝', '邵', '处', '景', '繁', '琮', '皓', '奋', '嶷', '严', '宓', '乾', '竺', '允', '仪', '凯', '平', '祗', '巴', '肜', '佥', '周', '广', '遗', '敏', '丑', '表', '授', '纪', '图', '虞', '让', '完', '凤', '邕', '琦', '鲁', '就', '腾', '任', '弘', '祖', '顺', '预', '绍', '祜', '徽', '配', '焉', '原', '彪', '融', '充', '承', '腾', '嵩', '冏', '穆', '殷', '询', '淑', '喈', '寻', '蕤', '鉴', '霖', '启', '礼', '邕', '贡', '俨', '苗', '熊', '炳', '铄', '潜', '偃', '据', '琮', '阐', '宇', '奂', '纬', '恒', '壹', '衮', '孚', '玹', '澳', '矩', '勤', '乘', '京', '均', '抗', '琬', '廉', '焜', '棘', '翕', '琨', '竦', '宪', '华', '甝', '霬', '憺', '恺', '悝', '晏', '爽', '羲', '训', '则', '彦', '皑', '熙', '彬', '璠', '峤', '郁', '德', '玉', '安民', '泰', '初', '炽', '演', '亮', '胤', '馥', '鼎', '震', '肇', '识', '毗', '摅', '纂',
+        ];
+
+        const SAN_GUO_WEIGHT_HIGH = new Set(['曹', '孙', '刘', '夏侯', '诸葛', '司马', '荀', '马', '王', '关', '张', '陆']);
+        const SAN_GUO_WEIGHT_DEFAULT = 50;
+        const SAN_GUO_WEIGHT_HIGH_VALUE = 200;
+
+        function getWeightedSanGuoSurname() {
+            const weightedList = [];
+            for (const surname of SAN_GUO_SURNAMES) {
+                const weight = SAN_GUO_WEIGHT_HIGH.has(surname) ? SAN_GUO_WEIGHT_HIGH_VALUE : SAN_GUO_WEIGHT_DEFAULT;
+                for (let i = 0; i < weight; i++) {
+                    weightedList.push(surname);
+                }
+            }
+            return weightedList[Math.floor(Math.random() * weightedList.length)];
+        }
+
+        function generateSanGuoName() {
+            const surname = getWeightedSanGuoSurname();
+            const given = SAN_GUO_GIVEN[Math.floor(Math.random() * SAN_GUO_GIVEN.length)];
+            return surname + given;
+        }
+
+        // ============================================================
+        //  明朝宗室数据
+        // ============================================================
+
+        const MING_LINES = [
+            { branch: '太子朱标', line: '允文遵祖训钦武大君胜顺道宜逢吉师良善用晟' },
+            { branch: '秦王朱樉', line: '尚志公诚秉惟怀敬谊存辅嗣资廉直匡时永信敦' },
+            { branch: '晋王朱棡', line: '济美锺奇表知新慎敏求审心咸景慕述学继前修' },
+            { branch: '燕王朱棣', line: '高瞻祁见佑厚载翊常由慈和怡伯仲简靖迪先猷' },
+            { branch: '周王朱橚', line: '有子同安睦勤朝在肃恭绍伦敷惠润昭格广登庸' },
+            { branch: '楚王朱桢', line: '孟季均荣显英华蕴盛容宏才升博衍茂士立全功' },
+            { branch: '齐王朱榑', line: '贤能长可庆睿智实堪宗养性期渊雅寅思复会通' },
+            { branch: '鲁王朱檀', line: '肇泰阳当健观颐寿以弘振举希兼达康庄遇本宁' },
+            { branch: '蜀王朱椿', line: '悦友申宾让承宣奉至平懋进深滋益端居务穆清' },
+            { branch: '湘王朱柏', line: '久镇开方岳扬威谨礼仪刚毅循超卓权衡素自持' },
+            { branch: '代王朱桂', line: '逊仕成聪俊充廷鼐鼎彝传贻连秀郁炳燿壮洪基' },
+            { branch: '肃王朱柍', line: '瞻禄贡真弼缙绅识烈忠曦晖跻当运凯谏处恒隆' },
+            { branch: '辽王朱植', line: '贵豪恩宠致宪术俨尊儒云仍祺保合操翰丽龙舆' },
+            { branch: '庆王朱栴', line: '秩邃寘台鼒倪伸帅倬奇适完因巨衎骘眷发需毗' },
+            { branch: '宁王朱权', line: '磐奠觐宸拱多谋统议中总添支庶阔作哲向亲衷' },
+            { branch: '岷王朱楩', line: '徽音膺彦誉定干企禋雍崇礼原谘访宽镕喜贲从' },
+            { branch: '谷王朱橞', line: '赋质僖雄敞丛兴阐福昌笃谐恂怿豫扩霁昱祯祥' },
+            { branch: '韩王朱松', line: '冲范徵偕旭融谟朗璟逵亶韶愉灏慥令绪价蕃维' },
+            { branch: '沈王朱模', line: '佶幼诠勋胤恬珵效回瑝湜源諲晳暐圭璧澈澄昂' },
+            { branch: '安王朱楹', line: '斐序斌廷赏凝覃浚祉襄恢严颛辑矩缜密廓程纲' },
+            { branch: '唐王朱桱', line: '琼芝弥宇宙硕器聿琳琚启龄蒙颂体嘉历协铭图' },
+            { branch: '郢王朱栋', line: '伟闻参望奭箴诲洎皋夔麒麟馀积兆奎颖晔璇玑' },
+            { branch: '伊王朱彝', line: '颙勉諟訏典褒珂采凤琛应畴颁胄选昆玉冠泉金' }
+        ];
+
+        const FIRE_CHARS = ['灬', '灭', '灮', '灯', '灰', '灱', '灲', '灳', '灴', '灵', '灶', '灷', '灸', '灹', '灺', '灻', '灼', '灾', '灿', '炀', '炁', '炂', '炃', '炄', '炅', '炆', '炇', '炈', '炉', '炊', '炋', '炌', '炍', '炎', '炏', '炐', '炑', '炒', '炓', '炔', '炕', '炖', '炗', '炘', '炙', '炚', '炛', '炜', '炝', '炞', '炟', '炠', '炡', '炢', '炣', '炤', '炥', '炦', '炧', '炨', '炩', '炪', '炫', '炬', '炭', '炮', '炯', '炰', '炱', '炲', '炳', '炴', '炵', '炶', '炷', '炸', '点', '爲', '炻', '炼', '炽', '炾', '炿', '烀', '烁', '烂', '烃', '烄', '烅', '烆', '烇', '烈', '烉', '烊', '烋', '烌', '烍', '烎', '乌', '烐', '烑', '烒', '烓', '烔', '烕', '烖', '烗', '烘', '烙', '烚', '烛', '烜', '烝', '烞', '烟', '烠', '烡', '烢', '烣', '烤', '烥', '烦', '烧', '烨', '烩', '烪', '烫', '烬', '热', '烮', '烯', '烰', '烱', '烲', '烳', '烴', '烵', '烶', '烷', '烸', '烹', '烺', '烻', '烼', '烽', '烾', '烿', '焀', '焁', '焂', '焃', '焄', '焅', '焆', '焇', '焈', '焉', '焊', '焋', '焌', '焍', '焎', '焏', '焐', '焑', '焒', '焓', '焔', '焕', '焖', '焗', '焘', '焙', '焚', '焛', '焜', '焝', '焞', '焟', '焠', '無', '焢', '焣', '焤', '焥', '焦', '焧', '焨', '焩', '焪', '焫', '焬', '焭', '焮', '焯', '焰', '焱', '焲', '焳', '焴', '焵', '然', '焷', '焸', '焹', '焺', '焻', '焼', '焽', '焾', '焿', '煀', '煁', '煂', '煃', '煄', '煅', '煆', '煇', '煈', '煉', '煊', '煋', '煌', '煍', '煎', '煏', '煐', '煑', '煒', '煓', '煔', '煕', '煖', '煗', '煘', '煙', '煚', '煛', '煜', '煝', '煞', '煟', '煠', '煡', '煢', '煣', '煤', '煥', '煦', '照', '煨', '煩', '煪', '煫', '煬', '煭', '煮', '煯', '煰', '煱', '煲', '煳', '煴', '煵', '煶', '煷', '煸', '煹', '煺', '煻', '煼', '煽', '煾', '煿', '熀', '熁', '熂', '熃', '熄', '熅', '熆', '熇', '熈', '熉', '熊', '熋', '熌', '熍', '熎', '熏', '熐', '熑', '熒', '熓', '熔', '熕', '熖', '熗', '熘', '熙', '熚', '熛', '熜', '熝', '熞', '熟', '熠', '熡', '熢', '熣', '熤', '熥', '熦', '熧', '熨', '熩', '熪', '熫', '熬', '熭', '熮', '熯', '熰', '热', '熲', '熳', '熴', '熵', '熶', '熷', '熸', '熹', '熺', '熻', '熼', '熽', '熾', '熿', '燀', '燁', '燂', '燃', '燄', '燅', '燆', '燇', '燈', '燉', '燊', '燋', '燌', '燍', '燎', '燏', '燐', '燑', '燒', '燓', '燔', '燕', '燖', '燗', '燘', '燙', '燚', '燛', '燜', '燝', '燞', '營', '燠', '燡', '燢', '燣', '燤', '燥', '燦', '燧', '燨', '燩', '燪', '燫', '燬', '燭', '燮', '燯', '燰', '燱', '燲', '燳', '燴', '燵', '燶', '燷', '燸', '燹', '燺', '燻', '燼', '燽', '燾', '燿', '爀', '爁', '爂', '爃', '爄', '爅', '爆', '爇', '爈', '爉', '爊', '爋', '爌', '爍', '爎', '爏', '爐', '爑', '爒', '爓', '爔', '爕', '爖', '爗', '爘', '爙', '爚', '爛', '爜', '爝', '爞', '爟', '爠', '爡', '爢', '爣', '爤', '爥', '爦', '爧', '爨', '爩'];
+
+        const EARTH_CHARS = ['土', '圡', '圢', '圣', '圤', '圥', '圦', '址', '圸', '圹', '场', '圻', '圼', '圽', '圾', '圿', '址', '坁', '坂', '坃', '坄', '坅', '坆', '均', '坈', '坉', '坊', '坋', '坌', '坍', '坎', '坏', '坐', '坑', '坒', '坓', '坔', '坕', '坖', '块', '坘', '坙', '坚', '坛', '坜', '坝', '坞', '坟', '坠', '坡', '坢', '坣', '坤', '坥', '坦', '坧', '坨', '坩', '坪', '坫', '坬', '坭', '坮', '坯', '垚', '坲', '坳', '坴', '坵', '坶', '坷', '坸', '坹', '坺', '坻', '坼', '坽', '坾', '坿', '垀', '垁', '垂', '垃', '垄', '垅', '垆', '垇', '垈', '垉', '垊', '型', '垌', '垍', '垎', '垏', '垐', '垑', '垒', '垓', '垔', '垕', '垖', '垗', '垘', '垙', '垚', '垛', '垜', '垝', '垞', '垟', '垠', '垡', '垢', '垣', '垤', '垥', '垦', '垧', '垨', '垩', '垪', '垫', '垬', '垭', '垮', '垯', '垰', '垱', '垲', '垳', '垴', '垵', '垶', '垷', '垸', '垹', '垺', '垻', '垼', '垽', '垾', '垿', '埀', '埁', '埂', '埃', '埄', '埅', '埆', '埇', '埈', '埉', '埊', '埋', '埌', '埍', '城', '埏', '埐', '埑', '埒', '埓', '埔', '埕', '埖', '埗', '埘', '埙', '埚', '埛', '埜', '埝', '埞', '域', '埠', '埡', '埢', '埣', '埤', '埥', '埦', '埧', '埨', '埩', '埪', '埫', '埬', '埭', '埮', '埯', '埰', '埱', '埲', '埳', '埴', '埵', '埶', '执', '埸', '培', '基', '埻', '埼', '埽', '埾', '埿', '堀', '堁', '堂', '堃', '堄', '堆', '堇', '堈', '堉', '堊', '堋', '堌', '堍', '堎', '堏', '堐', '堑', '堒', '堓', '堔', '堕', '堖', '堗', '堘', '堙', '堚', '堛', '堜', '堝', '堞', '堟', '堠', '堡', '堢', '堣', '堤', '堥', '堦', '堧', '堨', '堩', '堪', '堫', '堬', '堭', '堮', '堯', '堰', '報', '堲', '堳', '場', '堵', '堶', '堷', '堸', '堹', '堺', '堻', '堼', '堽', '堾', '堿', '塀', '塁', '塂', '塃', '塄', '塅', '塆', '塇', '塈', '塉', '塊', '塋', '塌', '塍', '塎', '塏', '塐', '塑', '塒', '塓', '塔', '塕', '塖', '塗', '塘', '塙', '塚', '塛', '塜', '塝', '塞', '塟', '塠', '塡', '塢', '塣', '塤', '塥', '塦', '塧', '塨', '塩', '塪', '填', '塬', '塭', '塮', '塯', '塰', '塱', '塲', '塳', '塴', '塵', '塶', '塷', '塸', '塹', '塺', '塻', '塼', '塽', '塾', '塿', '墀', '墁', '墂', '境', '墄', '墅', '墆', '墇', '墈', '墉', '墊', '墋', '墌', '墍', '墎', '墏', '墐', '墑', '墒', '墓', '墔', '墕', '墖', '増', '墘', '墙', '墚', '墛', '墜', '墝', '增', '墟', '墠', '墡', '墢', '墣', '墤', '墥', '墦', '墧', '墨', '墩', '墪', '墫', '墬', '墭', '墮', '墯', '墰', '墱', '墲', '墳', '墴', '墵', '墶', '墷', '墸', '墹', '墺', '墻', '墼', '墽', '墾', '墿', '壀', '壁', '壂', '壃', '壄', '壅', '壆', '壇', '壈', '壉', '壊', '壋', '壌', '壍', '壎', '壏', '壐', '壑', '壒', '壓', '壔', '壕', '壖', '壗', '壘', '壙', '壚', '壛', '壜', '壝', '壞', '壟', '壠', '壡', '壢', '壣', '壤', '壥', '壦', '壧', '壨', '壩', '壪'];
+
+        const METAL_CHARS = ['钅', '钆', '钇', '钉', '钋', '钊', '钌', '钍', '钎', '钏', '钐', '钒', '钕', '钔', '钖', '钘', '钙', '钚', '钜', '钝', '钞', '钟', '钢', '钣', '钤', '钥', '钦', '钧', '钨', '钩', '钪', '钫', '钬', '钭', '钮', '钯', '钰', '钱', '钲', '钳', '钴', '钵', '钶', '钷', '钸', '钹', '钺', '钻', '钼', '钽', '钾', '钿', '铀', '铁', '铂', '铃', '铄', '铅', '铆', '铈', '铉', '铊', '铋', '铌', '铍', '铎', '铏', '铐', '铑', '铒', '铓', '铔', '铕', '铖', '铗', '铘', '铙', '铚', '铛', '铜', '铝', '铞', '铟', '铠', '铡', '铢', '铣', '铤', '铥', '铦', '铧', '铨', '铩', '铪', '铫', '铬', '铭', '铮', '铯', '铰', '铱', '铲', '铳', '铴', '铵', '铷', '铹', '铻', '铼', '铽', '链', '铿', '销', '锁', '锂', '锃', '锄', '锅', '锆', '锇', '锈', '锉', '锊', '锋', '锌', '锍', '锎', '锏', '锐', '锑', '锒', '锓', '锔', '锕', '锖', '锗', '锘', '错', '锚', '锛', '锜', '锝', '锞', '锟', '锠', '锡', '锢', '锣', '锤', '锥', '锦', '锧', '锨', '锩', '锪', '锫', '锬', '锭', '键', '锯', '锰', '锱', '锲', '锳', '锴', '锵', '锶', '锷', '锸', '锹', '锺', '锻', '锼', '锽', '锾', '锿', '镀', '镁', '镂', '镃', '镄', '镅', '镆', '镇', '镈', '镉', '镊', '镋', '镌', '镍', '镎', '镏', '镐', '镑', '镒', '镓', '镔', '镕', '镖', '镗', '镘', '镙', '镚', '镛', '镜', '镝', '镞', '镟', '镠', '镡', '镢', '镣', '镤', '镥', '镦', '镧', '镨', '镩', '镪', '镫', '镬', '镭', '镮', '镯', '镰', '镱', '镲', '镳', '镴', '镵', '镶', '钁', '钂', '钃', '钄', '釒', '釓', '釔', '釕', '釖', '釗', '釘', '釙', '釚', '釛', '針', '釞', '釟', '釠', '釡', '釢', '釣', '釤', '釥', '釦', '釧', '釨', '釩', '釪', '釫', '釬', '釭', '釮', '釯', '釰', '釱', '釲', '釳', '釴', '釵', '釶', '釷', '釸', '釹', '釺', '釻', '釼', '釽', '釾', '釿', '鈀', '鈁', '鈂', '鈃', '鈄', '鈅', '鈆', '鈇', '鈈', '鈉', '鈊', '鈋', '鈌', '鈍', '鈎', '鈏', '鈐', '鈑', '鈒', '鈓', '鈔', '鈕', '鈖', '鈗', '鈘', '鈙', '鈚', '鈛', '鈜', '鈝', '鈞', '鈟', '鈠', '鈡', '鈢', '鈣', '鈤', '鈥', '鈦', '鈧', '鈨', '鈩', '鈪', '鈫', '鈬', '鈭', '鈮', '鈯', '鈰', '鈱', '鈲', '鈳', '鈴', '鈵', '鈶', '鈷', '鈸', '鈹', '鈺', '鈻', '鈼', '鈽', '鈾', '鈿', '鉀', '鉁', '鉂', '鉃', '鉄', '鉅', '鉆', '鉇', '鉈', '鉉', '鉊', '鉋', '鉌', '鉍', '鉎', '鉏', '鉐', '鉑', '鉒', '鉓', '鉔', '鉕', '鉖', '鉗', '鉘', '鉙', '鉚', '鉛', '鉜', '鉝', '鉞', '鉟', '鉠', '鉡', '鉢', '鉣', '鉤', '鉥', '鉦', '鉧', '鉨', '鉩', '鉪', '鉫', '鉬', '鉭', '鉮', '鉯', '鉰', '鉱', '鉲', '鉳', '鉴', '鉵', '鉶', '鉷', '鉸', '鉹', '鉺', '鉻', '鉼', '鉽', '鉾', '鉿', '銀', '銁', '銂', '銃', '銄', '銅', '銆', '銇', '銈', '銉', '銊', '銋', '銌', '銍', '銎', '銏', '銐', '銑', '銒', '銓', '銔', '銕', '銖', '銗', '銘', '銙', '銚', '銛', '銜', '銝', '銞', '銟', '銠', '銡', '銢', '銣', '銤', '銥', '銦', '銧', '銨', '銩', '銪', '銫', '銬', '銭', '銮', '銯', '銰', '銱', '銲', '銳', '銴', '銵', '銶', '銷', '銸', '銹', '銺', '銻', '銼', '銽', '銾', '銿', '鋀', '鋁', '鋂', '鋃', '鋄', '鋅', '鋆', '鋇', '鋈', '鋉', '鋊', '鋋', '鋌', '鋍', '鋎', '鋏', '鋐', '鋑', '鋒', '鋓', '鋔', '鋕', '鋖', '鋗', '鋘', '鋙', '鋚', '鋛', '鋜', '鋝', '鋞', '鋟', '鋠', '鋡', '鋢', '鋣', '鋤', '鋥', '鋦', '鋧', '鋨', '鋩', '鋪', '鋫', '鋬', '鋭', '鋮', '鋯', '鋰', '鋱', '鋲', '鋳', '鋴', '鋵', '鋶', '鋷', '鋸', '鋹', '鋺', '鋻', '鋼', '鋽', '鋾', '鋿', '錀', '錁', '錂', '錃', '錄', '錅', '錆', '錇', '錈', '錉', '錊', '錋', '錌', '錍', '錎', '錏', '錐', '錑', '錒', '錓', '錔', '錕', '錖', '錗', '錘', '錙', '錚', '錛', '錜', '錝', '錞', '錟', '錠', '錡', '錢', '錣', '錤', '錥', '錦', '錧', '錨', '錩', '錪', '錫', '錬', '錭', '錮', '錯', '錰', '錱', '録', '錳', '錴', '錵', '錶', '錷', '錸', '錹', '錺', '錻', '錼', '錽', '錾', '錿', '鍀', '鍁', '鍂', '鍃', '鍄', '鍅', '鍆', '鍇', '鍈', '鍉', '鍊', '鍋', '鍌', '鍍', '鍎', '鍏', '鍐', '鍑', '鍒', '鍓', '鍔', '鍕', '鍖', '鍗', '鍘', '鍙', '鍚', '鍛', '鍜', '鍝', '鍞', '鍟', '鍠', '鍡', '鍢', '鍣', '鍤', '鍥', '鍦', '鍧', '鍨', '鍩', '鍪', '鍫', '鍬', '鍭', '鍮', '鍯', '鍰', '鍱', '鍲', '鍳', '鍴', '鍵', '鍶', '鍷', '鍸', '鍹', '鍺', '鍻', '鍼', '鍽', '鍾', '鍿', '鎀', '鎁', '鎂', '鎃', '鎄', '鎅', '鎆', '鎇', '鎈', '鎉', '鎊', '鎋', '鎌', '鎍', '鎎', '鎏', '鎐', '鎑', '鎒', '鎓', '鎔', '鎕', '鎖', '鎗', '鎘', '鎙', '鎚', '鎛', '鎜', '鎝', '鎞', '鎟', '鎠', '鎡', '鎢', '鎣', '鎤', '鎥', '鎦', '鎧', '鎨', '鎩', '鎪', '鎫', '鎬', '鎭', '鎮', '鎯', '鎰', '鎱', '鎲', '鎳', '鎴', '鎵', '鎶', '鎷', '鎸', '鎹', '鎺', '鎻', '鎼', '鎽', '鎾', '鎿', '鏀', '鏁', '鏂', '鏃', '鏄', '鏅', '鏆', '鏇', '鏈', '鏉', '鏊', '鏋', '鏌', '鏍', '鏎', '鏏', '鏐', '鏑', '鏒', '鏓', '鏔', '鏕', '鏖', '鏗', '鏘', '鏙', '鏚', '鏛', '鏜', '鏝', '鏞', '鏟', '鏠', '鏡', '鏢', '鏣', '鏤', '鏥', '鏦', '鏧', '鏨', '鏩', '鏪', '鏫', '鏬', '鏭', '鏮', '鏯', '鏰', '鏱', '鏲', '鏳', '鏴', '鏵', '鏶', '鏷', '鏸', '鏹', '鏺', '鏻', '鏼', '鏽', '鏾', '鏿', '鐀', '鐁', '鐂', '鐃', '鐄', '鐅', '鐆', '鐇', '鐈', '鐉', '鐊', '鐋', '鐌', '鐍', '鐎', '鐏', '鐐', '鐑', '鐒', '鐓', '鐔', '鐕', '鐖', '鐗', '鐘', '鐙', '鐚', '鐛', '鐜', '鐝', '鐞', '鐟', '鐠', '鐡', '鐢', '鐣', '鐤', '鐥', '鐦', '鐧', '鐨', '鐩', '鐪', '鐫', '鐬', '鐭', '鐮', '鐯', '鐰', '鐱', '鐲', '鐳', '鐴', '鐵', '鐶', '鐷', '鐸', '鐹', '鐺', '鐻', '鐼', '鐽', '鐾', '鐿', '鑀', '鑁', '鑂', '鑃', '鑄', '鑅', '鑆', '鑇', '鑈', '鑉', '鑊', '鑋', '鑌', '鑍', '鑎', '鑏', '鑐', '鑑', '鑒', '鑓', '鑔', '鑕', '鑖', '鑗', '鑘', '鑙', '鑚', '鑛', '鑜', '鑝', '鑞', '鑟', '鑠', '鑡', '鑢', '鑣', '鑤', '鑥', '鑦', '鑧', '鑨', '鑩', '鑪', '鑫', '鑬', '鑭', '鑮', '鑯', '鑰', '鑱', '鑲', '鑳', '鑴', '鑵', '鑶', '鑷', '鑸', '鑹', '鑺', '鑻', '鑼', '鑽', '鑾', '鑿', '钀', '钁', '钂', '钃', '钄'];
+
+        const WATER_CHARS = ['氵', '氶', '氷', '水', '氹', '氺', '氻', '氼', '氽', '氾', '氿', '汀', '汁', '求', '汃', '汄', '汅', '汆', '汇', '汈', '汉', '汊', '汋', '汌', '汍', '汎', '汏', '汐', '汑', '汒', '汓', '汔', '汕', '汖', '汗', '汘', '汙', '汚', '汛', '汜', '汝', '汞', '江', '池', '污', '汢', '汣', '汤', '汥', '汦', '汧', '汨', '汩', '汪', '汫', '汬', '汭', '汮', '汯', '汰', '汱', '汲', '汳', '汴', '汵', '汶', '汷', '汸', '汹', '決', '汻', '汼', '汽', '汾', '汿', '沀', '沁', '沂', '沃', '沄', '沅', '沆', '沇', '沈', '沉', '沊', '沋', '沌', '沍', '沎', '沏', '沐', '沑', '沒', '沓', '沔', '沕', '沖', '沗', '沘', '沙', '沚', '沛', '沜', '沝', '沞', '沟', '沠', '没', '沢', '沣', '沤', '沥', '沦', '沧', '沨', '沩', '沪', '沫', '沬', '沭', '沮', '沯', '沰', '沱', '沲', '河', '沴', '沵', '沶', '沷', '沸', '油', '沺', '治', '沼', '沽', '沾', '沿', '泀', '況', '泂', '泃', '泄', '泅', '泆', '泇', '泈', '泉', '泊', '泋', '泌', '泍', '泎', '泏', '泐', '泑', '泒', '泓', '泔', '法', '泖', '泗', '泘', '泙', '泚', '泛', '泜', '泝', '泞', '泟', '泠', '泡', '波', '泣', '泤', '泥', '泦', '泧', '注', '泩', '泪', '泫', '泬', '泭', '泮', '泯', '泰', '泱', '泲', '泳', '泴', '泵', '泶', '泷', '泸', '泹', '泺', '泻', '泼', '泽', '泾', '泿', '洀', '洁', '洂', '洃', '洄', '洅', '洆', '洇', '洈', '洉', '洊', '洋', '洌', '洍', '洎', '洏', '洐', '洑', '洒', '洓', '洔', '洕', '洖', '洗', '洘', '洙', '洚', '洛', '洜', '洝', '洞', '洟', '洠', '洡', '洢', '洣', '洤', '津', '洦', '洧', '洨', '洩', '洪', '洫', '洬', '洭', '洮', '洯', '洰', '洱', '洲', '洳', '洴', '洵', '洶', '洷', '洸', '洹', '洺', '活', '洼', '洽', '派', '洿', '浀', '流', '浂', '浃', '浄', '浅', '浆', '浇', '浈', '浉', '浊', '测', '浌', '浍', '济', '浏', '浐', '浑', '浒', '浓', '浔', '浕', '浖', '浗', '浘', '浙', '浚', '浜', '浝', '浞', '浟', '浠', '浡', '浢', '浣', '浤', '浥', '浦', '浧', '浨', '浩', '浪', '浫', '浬', '浭', '浮', '浯', '浰', '浱', '浲', '浳', '浴', '浵', '浶', '海', '浸', '浹', '浺', '浻', '浼', '浽', '浾', '浿', '涀', '涁', '涂', '涃', '涄', '涅', '涆', '涇', '消', '涉', '涊', '涋', '涌', '涍', '涎', '涏', '涐', '涑', '涒', '涓', '涔', '涕', '涖', '涗', '涘', '涙', '涚', '涛', '涜', '涝', '涞', '涟', '涠', '涡', '涢', '涣', '涤', '涥', '润', '涧', '涨', '涩', '涪', '涫', '涬', '涭', '涮', '涯', '涰', '涱', '液', '涳', '涴', '涵', '涶', '涷', '涸', '涹', '涺', '涻', '涼', '涽', '涾', '涿', '淀', '淁', '淂', '淃', '淄', '淅', '淆', '淇', '淈', '淉', '淊', '淋', '淌', '淍', '淎', '淏', '淐', '淑', '淒', '淓', '淔', '淕', '淖', '淗', '淘', '淙', '淚', '淛', '淜', '淝', '淞', '淟', '淠', '淡', '淢', '淣', '淤', '淥', '淦', '淧', '淨', '淩', '淪', '淫', '淬', '淭', '淮', '淯', '淰', '深', '淲', '淳', '淴', '淵', '淶', '混', '淸', '淹', '淺', '添', '淼', '淽', '淾', '淿', '渀', '渁', '渂', '渃', '渄', '清', '渆', '渇', '済', '渉', '渊', '渋', '渌', '渍', '渎', '渏', '渐', '渑', '渒', '渓', '渔', '渕', '渖', '渗', '渘', '渙', '渚', '減', '渜', '渝', '渞', '渟', '渠', '渡', '渢', '渣', '渤', '渥', '渦', '渧', '渨', '温', '渪', '渫', '測', '渭', '渮', '港', '渰', '渱', '渲', '渳', '渴', '渵', '渶', '渷', '游', '渹', '渺', '渻', '渼', '渽', '渾', '渿', '湀', '湁', '湂', '湃', '湄', '湅', '湆', '湇', '湈', '湉', '湊', '湋', '湌', '湍', '湎', '湏', '湐', '湑', '湒', '湓', '湔', '湕', '湖', '湗', '湘', '湙', '湚', '湛', '湜', '湝', '湞', '湟', '湠', '湡', '湢', '湣', '湤', '湥', '湦', '湧', '湨', '湩', '湪', '湫', '湬', '湭', '湮', '湯', '湰', '湱', '湲', '湳', '湴', '湵', '湶', '湷', '湸', '湹', '湺', '湻', '湼', '湽', '湾', '湿', '満', '溁', '溂', '溃', '溄', '溅', '溆', '溇', '溈', '溉', '溊', '溋', '溌', '溍', '溎', '溏', '源', '溑', '溒', '溓', '溔', '溕', '準', '溗', '溘', '溙', '溚', '溛', '溜', '溝', '溞', '溟', '溠', '溡', '溢', '溣', '溤', '溥', '溦', '溧', '溨', '溩', '溪', '溫', '溬', '溭', '溮', '溯', '溰', '溱', '溲', '溳', '溴', '溵', '溶', '溷', '溸', '溹', '溺', '溻', '溼', '溽', '溾', '溿', '滀', '滁', '滂', '滃', '滄', '滅', '滆', '滇', '滈', '滉', '滊', '滋', '滌', '滍', '滎', '滏', '滐', '滑', '滒', '滓', '滔', '滕', '滖', '滗', '滘', '滙', '滚', '滛', '滜', '滝', '滞', '滟', '滠', '满', '滢', '滣', '滤', '滥', '滦', '滧', '滨', '滩', '滪', '滫', '滬', '滭', '滮', '滯', '滰', '滱', '滲', '滳', '滴', '滵', '滶', '滷', '滸', '滹', '滺', '滻', '滼', '滽', '滾', '滿', '漀', '漁', '漂', '漃', '漄', '漅', '漆', '漇', '漈', '漉', '漊', '漋', '漌', '漍', '漎', '漏', '漐', '漑', '漒', '漓', '演', '漕', '漖', '漗', '漘', '漙', '漚', '漛', '漜', '漝', '漞', '漟', '漠', '漡', '漢', '漣', '漤', '漥', '漦', '漧', '漨', '漩', '漪', '漫', '漬', '漭', '漮', '漯', '漰', '漱', '漲', '漳', '漴', '漵', '漶', '漷', '漸', '漹', '漺', '漻', '漼', '漽', '漾', '漿', '潀', '潁', '潂', '潃', '潄', '潅', '潆', '潇', '潈', '潉', '潊', '潋', '潌', '潍', '潎', '潏', '潐', '潑', '潒', '潓', '潔', '潕', '潖', '潗', '潘', '潙', '潚', '潛', '潜', '潝', '潞', '潟', '潠', '潡', '潢', '潣', '潤', '潥', '潦', '潧', '潨', '潩', '潪', '潫', '潬', '潭', '潮', '潯', '潰', '潱', '潲', '潳', '潴', '潵', '潶', '潷', '潸', '潹', '潺', '潻', '潼', '潽', '潾', '潿', '澀', '澁', '澂', '澃', '澄', '澅', '澆', '澇', '澈', '澉', '澊', '澋', '澌', '澍', '澎', '澏', '澐', '澑', '澒', '澓', '澔', '澕', '澖', '澗', '澘', '澙', '澚', '澛', '澜', '澝', '澞', '澟', '澠', '澡', '澢', '澣', '澤', '澥', '澦', '澧', '澨', '澩', '澪', '澫', '澬', '澭', '澮', '澯', '澰', '澱', '澲', '澳', '澴', '澵', '澶', '澷', '澸', '澹', '澺', '澻', '澼', '澽', '澾', '澿', '激', '濁', '濂', '濃', '濄', '濅', '濆', '濇', '濈', '濉', '濊', '濋', '濌', '濍', '濎', '濏', '濐', '濑', '濒', '濓', '濔', '濕', '濖', '濗', '濘', '濙', '濚', '濛', '濜', '濝', '濞', '濟', '濠', '濡', '濢', '濣', '濤', '濥', '濦', '濧', '濨', '濩', '濪', '濫', '濬', '濭', '濮', '濯', '濰', '濱', '濲', '濳', '濴', '濵', '濶', '濷', '濸', '濹', '濺', '濻', '濼', '濽', '濾', '濿', '瀀', '瀁', '瀂', '瀃', '瀄', '瀅', '瀆', '瀇', '瀈', '瀉', '瀊', '瀋', '瀌', '瀍', '瀎', '瀏', '瀐', '瀑', '瀒', '瀓', '瀔', '瀕', '瀖', '瀗', '瀘', '瀙', '瀚', '瀛', '瀜', '瀝', '瀞', '瀟', '瀠', '瀡', '瀢', '瀣', '瀤', '瀥', '瀦', '瀧', '瀨', '瀩', '瀪', '瀫', '瀬', '瀭', '瀮', '瀯', '瀰', '瀱', '瀲', '瀳', '瀴', '瀵', '瀶', '瀷', '瀸', '瀹', '瀺', '瀻', '瀼', '瀽', '瀾', '瀿', '灀', '灁', '灂', '灃', '灄', '灅', '灆', '灇', '灈', '灉', '灊', '灋', '灌', '灍', '灎', '灏', '灐', '灑', '灒', '灓', '灔', '灕', '灖', '灗', '灘', '灙', '灚', '灛', '灜', '灝', '灞', '灟', '灠', '灡', '灢', '灣', '灤', '灥', '灦', '灧', '灨', '灩', '灪'];
+
+        const WOOD_CHARS = ['木', '朩', '未', '末', '本', '术', '朱', '朰', '朴', '朵', '朳', '杀', '机', '权', '朽', '杁', '杄', '杅', '杆', '杈', '杉', '杊', '杋', '杌', '杍', '李', '杏', '材', '村', '杒', '杓', '杔', '杕', '杖', '杗', '杘', '杙', '杚', '杛', '杜', '杝', '杞', '束', '杠', '条', '杢', '杣', '杤', '杦', '杧', '杨', '杩', '杪', '杫', '杬', '杭', '杮', '杯', '杰', '東', '杲', '杳', '杴', '杵', '杶', '杷', '杸', '杹', '杺', '杻', '杼', '杽', '松', '板', '枀', '极', '枂', '枃', '构', '枅', '枆', '枇', '枈', '枉', '枊', '枋', '枌', '枍', '枎', '枏', '析', '枑', '枒', '枓', '枔', '枕', '枖', '林', '枘', '枙', '枚', '枛', '果', '枝', '枞', '枟', '枠', '枡', '枢', '枣', '枤', '枥', '枦', '枧', '枨', '枩', '枪', '枫', '枬', '枭', '枮', '枯', '枰', '枱', '枲', '枳', '枴', '枵', '架', '枷', '枸', '枹', '枺', '枻', '枼', '枽', '枾', '枿', '柀', '柁', '柂', '柃', '柄', '柅', '柆', '柇', '柈', '柉', '柊', '柋', '柌', '柍', '柎', '柏', '某', '柑', '柒', '染', '柔', '柕', '柖', '柗', '柘', '柙', '柚', '柛', '柜', '柝', '柞', '柟', '柠', '柡', '柢', '柣', '柤', '查', '柦', '柧', '柨', '柩', '柪', '柫', '柬', '柭', '柮', '柯', '柰', '柱', '柲', '柳', '柴', '柵', '柶', '柷', '柸', '柹', '柺', '査', '柼', '柽', '柾', '柿', '栀', '栁', '栂', '栃', '栄', '栅', '栆', '标', '栈', '栉', '栊', '栋', '栌', '栍', '栎', '栏', '栐', '树', '栒', '栓', '栔', '栕', '栖', '栗', '栘', '栙', '栚', '栛', '栜', '栝', '栞', '栟', '栠', '校', '栢', '栣', '栤', '栥', '栦', '栧', '栨', '栩', '株', '栫', '栬', '栭', '栮', '栯', '栰', '栱', '栲', '栳', '栴', '栵', '栶', '样', '核', '根', '栺', '栻', '格', '栽', '栾', '栿', '桀', '桁', '桂', '桃', '桄', '桅', '框', '桇', '案', '桉', '桊', '桋', '桌', '桍', '桎', '桏', '桐', '桑', '桒', '桓', '桔', '桕', '桖', '桗', '桘', '桙', '桚', '桛', '桜', '桝', '桞', '桟', '桠', '桡', '桢', '档', '桤', '桥', '桦', '桧', '桨', '桩', '桪', '桫', '桬', '桭', '桮', '桯', '桰', '桱', '桲', '桳', '桴', '桵', '桶', '桷', '桸', '桹', '桺', '桻', '桼', '桽', '桾', '桿', '梀', '梁', '梂', '梃', '梄', '梅', '梆', '梇', '梈', '梉', '梊', '梋', '梌', '梍', '梎', '梏', '梐', '梑', '梒', '梓', '梔', '梕', '梖', '梗', '梘', '梙', '梚', '梛', '梜', '條', '梞', '梟', '梠', '梡', '梢', '梣', '梤', '梥', '梦', '梧', '梨', '梩', '梪', '梫', '梬', '梭', '梮', '梯', '械', '梱', '梲', '梳', '梴', '梵', '梶', '梷', '梸', '梹', '梺', '梻', '梼', '梽', '梾', '梿', '检', '棁', '棂', '棃', '棄', '棅', '棆', '棇', '棈', '棉', '棊', '棋', '棌', '棍', '棎', '棏', '棐', '棑', '棒', '棓', '棔', '棕', '棖', '棗', '棘', '棙', '棚', '棛', '棜', '棝', '棞', '棟', '棠', '棡', '棢', '棣', '棤', '棥', '棦', '棧', '棨', '棩', '棪', '棫', '棬', '棭', '森', '棯', '棰', '棱', '棲', '棳', '棴', '棵', '棶', '棷', '棸', '棹', '棺', '棻', '棼', '棽', '棾', '棿', '椀', '椁', '椂', '椃', '椄', '椅', '椆', '椇', '椈', '椉', '椊', '椋', '椌', '植', '椎', '椏', '椐', '椑', '椒', '椓', '椔', '椕', '椖', '椗', '椘', '椙', '椚', '椛', '検', '椝', '椞', '椟', '椠', '椡', '椢', '椣', '椤', '椥', '椦', '椧', '椨', '椩', '椪', '椫', '椬', '椭', '椮', '椯', '椰', '椱', '椲', '椳', '椴', '椵', '椶', '椷', '椸', '椹', '椺', '椻', '椼', '椽', '椾', '椿', '楀', '楁', '楂', '楃', '楄', '楅', '楆', '楇', '楈', '楉', '楊', '楋', '楌', '楍', '楎', '楏', '楐', '楑', '楒', '楓', '楔', '楕', '楖', '楗', '楘', '楙', '楚', '楛', '楜', '楝', '楞', '楟', '楠', '楡', '楢', '楣', '楤', '楥', '楦', '楧', '楨', '楩', '楪', '楫', '楬', '業', '楮', '楯', '楰', '楱', '楲', '楳', '楴', '極', '楶', '楷', '楸', '楹', '楺', '楻', '楼', '楽', '楾', '楿', '榀', '榁', '概', '榃', '榄', '榅', '榆', '榇', '榈', '榉', '榊', '榋', '榌', '榍', '榎', '榏', '榐', '榑', '榒', '榓', '榔', '榕', '榖', '榗', '榘', '榙', '榚', '榛', '榜', '榝', '榞', '榟', '榠', '榡', '榢', '榣', '榤', '榥', '榦', '榧', '榨', '榩', '榪', '榫', '榬', '榭', '榮', '榯', '榰', '榱', '榲', '榳', '榴', '榵', '榶', '榷', '榸', '榹', '榺', '榻', '榼', '榽', '榾', '榿', '槀', '槁', '槂', '槃', '槄', '槅', '槆', '槇', '槈', '槉', '槊', '構', '槌', '槍', '槎', '槏', '槐', '槑', '槒', '槓', '槔', '槕', '槖', '槗', '様', '槙', '槚', '槛', '槜', '槝', '槞', '槟', '槠', '槡', '槢', '槣', '槤', '槥', '槦', '槧', '槨', '槩', '槪', '槫', '槬', '槭', '槮', '槯', '槰', '槱', '槲', '槳', '槴', '槵', '槶', '槷', '槸', '槹', '槺', '槻', '槼', '槽', '槾', '槿', '樀', '樁', '樂', '樃', '樄', '樅', '樆', '樇', '樈', '樉', '樊', '樋', '樌', '樍', '樎', '樏', '樐', '樑', '樒', '樓', '樔', '樕', '樖', '樗', '樘', '標', '樚', '樛', '樜', '樝', '樞', '樟', '樠', '模', '樢', '樣', '樤', '樥', '樦', '樧', '樨', '権', '横', '樫', '樬', '樭', '樮', '樯', '樰', '樱', '樲', '樳', '樴', '樵', '樶', '樷', '樸', '樹', '樺', '樻', '樼', '樽', '樾', '樿', '橀', '橁', '橂', '橃', '橄', '橅', '橆', '橇', '橈', '橉', '橊', '橋', '橌', '橍', '橎', '橏', '橐', '橑', '橒', '橓', '橔', '橕', '橖', '橗', '橘', '橙', '橚', '橛', '橜', '橝', '橞', '機', '橠', '橡', '橢', '橣', '橤', '橥', '橦', '橧', '橨', '橩', '橪', '橫', '橬', '橭', '橮', '橯', '橰', '橱', '橲', '橳', '橴', '橵', '橶', '橷', '橸', '橹', '橺', '橻', '橼', '橽', '橾', '橿', '檀', '檁', '檂', '檃', '檄', '檅', '檆', '檇', '檈', '檉', '檊', '檋', '檌', '檍', '檎', '檏', '檐', '檑', '檒', '檓', '檔', '檕', '檖', '檗', '檘', '檙', '檚', '檛', '檜', '檝', '檞', '檟', '檠', '檡', '檢', '檣', '檤', '檥', '檦', '檧', '檨', '檩', '檪', '檫', '檬', '檭', '檮', '檯', '檰', '檱', '檲', '檳', '檴', '檵', '檶', '檷', '檸', '檹', '檺', '檻', '檼', '檽', '檾', '檿', '櫀', '櫁', '櫂', '櫃', '櫄', '櫅', '櫆', '櫇', '櫈', '櫉', '櫊', '櫋', '櫌', '櫍', '櫎', '櫏', '櫐', '櫑', '櫒', '櫓', '櫔', '櫕', '櫖', '櫗', '櫘', '櫙', '櫚', '櫛', '櫜', '櫝', '櫞', '櫟', '櫠', '櫡', '櫢', '櫣', '櫤', '櫥', '櫦', '櫧', '櫨', '櫩', '櫪', '櫫', '櫬', '櫭', '櫮', '櫯', '櫰', '櫱', '櫲', '櫳', '櫴', '櫵', '櫶', '櫷', '櫸', '櫹', '櫺', '櫻', '櫼', '櫽', '櫾', '櫿', '欀', '欁', '欂', '欃', '欄', '欅', '欆', '欇', '欈', '欉', '權', '欋', '欌', '欍', '欎', '欏', '欐', '欑', '欒', '欓', '欔', '欕', '欖', '欗', '欘', '欙', '欚', '欛', '欜', '欝', '欞', '欟'];
+
+        const ELEMENT_MAP = ['火', '土', '金', '水', '木'];
+
+        function getElementChars(element) {
+            switch (element) {
+                case '火': return FIRE_CHARS;
+                case '土': return EARTH_CHARS;
+                case '金': return METAL_CHARS;
+                case '水': return WATER_CHARS;
+                case '木': return WOOD_CHARS;
+                default: return FIRE_CHARS;
+            }
+        }
+
+        // ============================================================
+        //  明朝宗室生成逻辑
+        // ============================================================
+        function generateMingName() {
+            const branch = MING_LINES[Math.floor(Math.random() * MING_LINES.length)];
+            const line = branch.line;
+            const chars = line.split('');
+            const index = Math.floor(Math.random() * chars.length);
+            const middleChar = chars[index];
+            const pos = index + 1;
+            const elementIndex = (pos - 1) % 5;
+            const element = ELEMENT_MAP[elementIndex];
+            const elementChars = getElementChars(element);
+            const lastChar = elementChars[Math.floor(Math.random() * elementChars.length)];
+
+            return {
+                name: '朱' + middleChar + lastChar,
+                branch: branch.branch,
+                generation: pos
+            };
+        }
+
+        function getLineageText(result) {
+            const gen = result.generation;
+            const actualGen = gen + 1;
+            if (actualGen === 1) return '太祖之子';
+            if (actualGen === 2) return '太祖之孙';
+            if (actualGen === 3) return '太祖曾孙';
+            if (actualGen === 4) return '太祖玄孙';
+            return '太祖' + actualGen + '世孙';
+        }
+
+        // ============================================================
+        //  通用数据层
+        // ============================================================
+
+        const DEFAULT_DATA = {
+            surnames: ['陆', '明', '李', '孙', '钱', '苏', '郑', '周', '吴', '褚', '张', '王', '郑', '冯', '蒋', '何', '沈', '陈',
+                '卫', '孔', '秦', '许', '韩', '朱', '葛', '魏', '张', '杨', '吕', '范', '乐', '曹', '奚', '施', '邹', '林', '金',
+                '谢', '严', '水', '薛', '云', '喻', '华', '窦', '杜', '潘', '柏', '陶', '昌', '裴', '鲁', '马', '姜', '凤', '阮',
+                '方', '苗', '彭', '花', '兰', '柳', '俞', '郎', '丰', '史', '安', '任', '韦', '廉', '顾', '常', '戚', '袁', '雷',
+                '舒', '傅', '章', '费', '汤', '高', '姚', '唐', '岑', '罗', '夏', '邵', '贺', '滕', '卞', '江', '穆', '郝', '殷',
+                '伍', '郭', '萧', '时', '毕', '汪', '元', '齐', '邬', '臧', '湛', '余', '于', '计', '谈', '和', '康', '伏', '宋',
+                '孟', '平', '戴', '纪', '董', '黄', '茅', '祝', '梁', '毛', '熊', '蓝', '田', '狄', '项', '凌', '盛', '成', '蔡',
+                '颜', '樊', '闵', '娄', '梅', '胡', '祁', '童', '钟', '万', '霍', '邱', '徐', '卢', '贾', '霍', '管', '宗', '路',
+                '虞', '解', '骆', '应', '房', '莫', '宣', '邓', '左', '石', '郁', '程', '桓'
+            ],
+            secondChars:['雪', '环', '融', '溪', '哲', '品', '红', '紫', '昕', '霜', '佩', '贺', '泉', '理', '素', '绿', '子', '新',
+        '露', '珠', '祝', '孝', '盈', '真', '烈', '一', '馨', '霞', '冰', '容', '颖', '仁', '昀', '朱', '以', '歆', '云',
+        '玉', '禄', '绍', '璃', '厚', '锦', '临', '蕾', '月', '珍', '寿', '彤', '敦', '神', '涟', '二', '之', '星', '贵',
+        '奕', '沐', '信', '湛', '昭', '三', '早', '敏', '丽', '祥', '浴', '茉', '观', '郎', '丝', '尧', '曦', '美', '瑞',
+        '世', '和', '礼', '朗', '无', '顺', '晖', '妙', '桐', '伟', '怀', '天', '遥', '六', '淑', '晴', '佳', '利', '杰',
+        '似', '弦', '诺', '九', '凝', '霁', '好', '贞', '俊', '筠', '贤', '谨', '童', '柠', '霓', '如', '染', '豪', '迎',
+        '仙', '懿', '瞳', '晓', '蓝', '意', '净', '华', '鉴', '平', '州', '芝', '萧', '娟', '家', '凉', '思', '壮', '恒',
+        '逸', '芷', '潇', '娜', '康', '媚', '英', '健', '久', '映', '昱', '攸', '娴', '乐', '嫣', '语', '剑', '远', '洲',
+        '茗', '载', '娇', '喜', '荻', '宇', '钧', '芸', '惠', '酒', '亦', '娥', '欢', '若', '浩', '铭', '青', '慧', '见',
+        '嫦', '妩', '慎', '行', '然', '雨', '松', '徽', '水', '佑', '雯', '良', '允', '予', '锐', '言', '绘', '梦', '鹤',
+        '训', '善', '守', '智', '香', '武', '瑜', '伊', '相', '霖', '勤', '正', '裕', '朴', '吉', '蘅', '仪', '简', '霄',
+        '俭', '直', '睿', '实', '毅', '衡', '艺', '靖', '岚', '景', '忠', '轩', '坚', '玄', '珩', '心', '镜',
+        '允', '文', '遵', '祖', '训', '钦', '武', '大', '君', '胜', '顺', '道', '宜', '逢', '吉', '师', '良', '善', '用', '晟',
+        '尚', '志', '公', '诚', '秉', '惟', '怀', '敬', '谊', '存', '辅', '嗣', '资', '廉', '直', '匡', '时', '永', '信', '敦',
+        '济', '美', '锺', '奇', '表', '知', '新', '慎', '敏', '求', '审', '心', '咸', '景', '慕', '述', '学', '继', '前', '修',
+        '高', '瞻', '祁', '见', '佑', '厚', '载', '翊', '常', '由', '慈', '和', '怡', '伯', '仲', '简', '靖', '迪', '先', '猷',
+        '有', '子', '同', '安', '睦', '勤', '朝', '在', '肃', '恭', '绍', '伦', '敷', '惠', '润', '昭', '格', '广', '登', '庸',
+        '孟', '季', '均', '荣', '显', '英', '华', '蕴', '盛', '容', '宏', '才', '升', '博', '衍', '茂', '士', '立', '全', '功',
+        '贤', '能', '长', '可', '庆', '睿', '智', '实', '堪', '宗', '养', '性', '期', '渊', '雅', '寅', '思', '复', '会', '通',
+        '肇', '泰', '阳', '当', '健', '观', '颐', '寿', '以', '弘', '振', '举', '希', '兼', '达', '康', '庄', '遇', '本', '宁',
+        '悦', '友', '申', '宾', '让', '承', '宣', '奉', '至', '平', '懋', '进', '深', '滋', '益', '端', '居', '务', '穆', '清',
+        '久', '镇', '开', '方', '岳', '扬', '威', '谨', '礼', '仪', '刚', '毅', '循', '超', '卓', '权', '衡', '素', '自', '持',
+        '逊', '仕', '成', '聪', '俊', '充', '廷', '鼐', '鼎', '彝', '传', '贻', '连', '秀', '郁', '炳', '燿', '壮', '洪', '基',
+        '瞻', '禄', '贡', '真', '弼', '缙', '绅', '识', '烈', '忠', '曦', '晖', '跻', '当', '运', '凯', '谏', '处', '恒', '隆',
+        '贵', '豪', '恩', '宠', '致', '宪', '术', '俨', '尊', '儒', '云', '仍', '祺', '保', '合', '操', '翰', '丽', '龙', '舆',
+        '秩', '邃', '寘', '台', '鼒', '倪', '伸', '帅', '倬', '奇', '适', '完', '因', '巨', '衎', '骘', '眷', '发', '需', '毗',
+        '磐', '奠', '觐', '宸', '拱', '多', '谋', '统', '议', '中', '总', '添', '支', '庶', '阔', '作', '哲', '向', '亲', '衷',
+        '徽', '音', '膺', '彦', '誉', '定', '干', '企', '禋', '雍', '崇', '礼', '原', '谘', '访', '宽', '镕', '喜', '贲', '从',
+        '赋', '质', '僖', '雄', '敞', '丛', '兴', '阐', '福', '昌', '笃', '谐', '恂', '怿', '豫', '扩', '霁', '昱', '祯', '祥',
+        '冲', '范', '徵', '偕', '旭', '融', '谟', '朗', '璟', '逵', '亶', '韶', '愉', '灏', '慥', '令', '绪', '价', '蕃', '维',
+        '佶', '幼', '诠', '勋', '胤', '恬', '珵', '效', '回', '瑝', '湜', '源', '諲', '晳', '暐', '圭', '璧', '澈', '澄', '昂',
+        '斐', '序', '斌', '廷', '赏', '凝', '覃', '浚', '祉', '襄', '恢', '严', '颛', '辑', '矩', '缜', '密', '廓', '程', '纲',
+        '琼', '芝', '弥', '宇', '宙', '硕', '器', '聿', '琳', '琚', '启', '龄', '蒙', '颂', '体', '嘉', '历', '协', '铭', '图',
+        '伟', '闻', '参', '望', '奭', '箴', '诲', '洎', '皋', '夔', '麒', '麟', '馀', '积', '兆', '奎', '颖', '晔', '璇', '玑',
+        '颙', '勉', '諟', '訏', '典', '褒', '珂', '采', '凤', '琛', '应', '畴', '颁', '胄', '选', '昆', '玉', '冠', '泉', '金',
+        '霂', '琬', '琰', '璎', '珞', '熹', '煜', '昉', '玥', '玦', '珺', '瑄', '玙', '璿', '琅', '珝', '琤', '瑢',
+        '婳', '媖', '婵', '姝', '娆', '嫣', '妩', '娉', '婷', '婉', '娩', '娴', '静', '淑', '慧', '悦', '忻', '恬',
+        '怡', '慕', '惜', '悠', '念', '怀', '蕙', '芷', '蘅', '薇', '荷', '莲', '蓉', '芙', '兰', '菊', '梅', '竹',
+        '松', '霜', '露', '霞', '霓', '月', '星', '辰', '曙', '宸', '翊', '璋', '瑞', '霖', '霆', '昂', '昱', '晟',
+        '晞', '晗', '曜', '明', '宣', '恒', '恺', '恪', '慎', '诚', '谦', '弘', '毅', '卓', '越', '轩', '博', '睿',
+        '哲', '翰', '飞', '鹏', '霄', '沧', '溟', '琪'
+            ],
+            thirdChars:['雪', '环', '融', '溪', '哲', '品', '红', '紫', '昕', '霜', '佩', '贺', '泉', '理', '素', '绿', '子', '新',
+        '露', '珠', '祝', '孝', '盈', '真', '烈', '一', '馨', '霞', '冰', '容', '颖', '仁', '昀', '朱', '以', '歆', '云',
+        '玉', '禄', '绍', '璃', '厚', '锦', '临', '蕾', '月', '珍', '寿', '彤', '敦', '神', '涟', '二', '之', '星', '贵',
+        '奕', '沐', '信', '湛', '昭', '三', '早', '敏', '丽', '祥', '浴', '茉', '观', '郎', '丝', '尧', '曦', '美', '瑞',
+        '世', '和', '礼', '朗', '无', '顺', '晖', '妙', '桐', '伟', '怀', '天', '遥', '六', '淑', '晴', '佳', '利', '杰',
+        '似', '弦', '诺', '九', '凝', '霁', '好', '贞', '俊', '筠', '贤', '谨', '童', '柠', '霓', '如', '染', '豪', '迎',
+        '仙', '懿', '瞳', '晓', '蓝', '意', '净', '华', '鉴', '平', '州', '芝', '萧', '娟', '家', '凉', '思', '壮', '恒',
+        '逸', '芷', '潇', '娜', '康', '媚', '英', '健', '久', '映', '昱', '攸', '娴', '乐', '嫣', '语', '剑', '远', '洲',
+        '茗', '载', '娇', '喜', '荻', '宇', '钧', '芸', '惠', '酒', '亦', '娥', '欢', '若', '浩', '铭', '青', '慧', '见',
+        '嫦', '妩', '慎', '行', '然', '雨', '松', '徽', '水', '佑', '雯', '良', '允', '予', '锐', '言', '绘', '梦', '鹤',
+        '训', '善', '守', '智', '香', '武', '瑜', '伊', '相', '霖', '勤', '正', '裕', '朴', '吉', '蘅', '仪', '简', '霄',
+        '俭', '直', '睿', '实', '毅', '衡', '艺', '靖', '岚', '景', '忠', '轩', '坚', '玄', '珩', '心', '镜',
+        '允', '文', '遵', '祖', '训', '钦', '武', '大', '君', '胜', '顺', '道', '宜', '逢', '吉', '师', '良', '善', '用', '晟',
+        '尚', '志', '公', '诚', '秉', '惟', '怀', '敬', '谊', '存', '辅', '嗣', '资', '廉', '直', '匡', '时', '永', '信', '敦',
+        '济', '美', '锺', '奇', '表', '知', '新', '慎', '敏', '求', '审', '心', '咸', '景', '慕', '述', '学', '继', '前', '修',
+        '高', '瞻', '祁', '见', '佑', '厚', '载', '翊', '常', '由', '慈', '和', '怡', '伯', '仲', '简', '靖', '迪', '先', '猷',
+        '有', '子', '同', '安', '睦', '勤', '朝', '在', '肃', '恭', '绍', '伦', '敷', '惠', '润', '昭', '格', '广', '登', '庸',
+        '孟', '季', '均', '荣', '显', '英', '华', '蕴', '盛', '容', '宏', '才', '升', '博', '衍', '茂', '士', '立', '全', '功',
+        '贤', '能', '长', '可', '庆', '睿', '智', '实', '堪', '宗', '养', '性', '期', '渊', '雅', '寅', '思', '复', '会', '通',
+        '肇', '泰', '阳', '当', '健', '观', '颐', '寿', '以', '弘', '振', '举', '希', '兼', '达', '康', '庄', '遇', '本', '宁',
+        '悦', '友', '申', '宾', '让', '承', '宣', '奉', '至', '平', '懋', '进', '深', '滋', '益', '端', '居', '务', '穆', '清',
+        '久', '镇', '开', '方', '岳', '扬', '威', '谨', '礼', '仪', '刚', '毅', '循', '超', '卓', '权', '衡', '素', '自', '持',
+        '逊', '仕', '成', '聪', '俊', '充', '廷', '鼐', '鼎', '彝', '传', '贻', '连', '秀', '郁', '炳', '燿', '壮', '洪', '基',
+        '瞻', '禄', '贡', '真', '弼', '缙', '绅', '识', '烈', '忠', '曦', '晖', '跻', '当', '运', '凯', '谏', '处', '恒', '隆',
+        '贵', '豪', '恩', '宠', '致', '宪', '术', '俨', '尊', '儒', '云', '仍', '祺', '保', '合', '操', '翰', '丽', '龙', '舆',
+        '秩', '邃', '寘', '台', '鼒', '倪', '伸', '帅', '倬', '奇', '适', '完', '因', '巨', '衎', '骘', '眷', '发', '需', '毗',
+        '磐', '奠', '觐', '宸', '拱', '多', '谋', '统', '议', '中', '总', '添', '支', '庶', '阔', '作', '哲', '向', '亲', '衷',
+        '徽', '音', '膺', '彦', '誉', '定', '干', '企', '禋', '雍', '崇', '礼', '原', '谘', '访', '宽', '镕', '喜', '贲', '从',
+        '赋', '质', '僖', '雄', '敞', '丛', '兴', '阐', '福', '昌', '笃', '谐', '恂', '怿', '豫', '扩', '霁', '昱', '祯', '祥',
+        '冲', '范', '徵', '偕', '旭', '融', '谟', '朗', '璟', '逵', '亶', '韶', '愉', '灏', '慥', '令', '绪', '价', '蕃', '维',
+        '佶', '幼', '诠', '勋', '胤', '恬', '珵', '效', '回', '瑝', '湜', '源', '諲', '晳', '暐', '圭', '璧', '澈', '澄', '昂',
+        '斐', '序', '斌', '廷', '赏', '凝', '覃', '浚', '祉', '襄', '恢', '严', '颛', '辑', '矩', '缜', '密', '廓', '程', '纲',
+        '琼', '芝', '弥', '宇', '宙', '硕', '器', '聿', '琳', '琚', '启', '龄', '蒙', '颂', '体', '嘉', '历', '协', '铭', '图',
+        '伟', '闻', '参', '望', '奭', '箴', '诲', '洎', '皋', '夔', '麒', '麟', '馀', '积', '兆', '奎', '颖', '晔', '璇', '玑',
+        '颙', '勉', '諟', '訏', '典', '褒', '珂', '采', '凤', '琛', '应', '畴', '颁', '胄', '选', '昆', '玉', '冠', '泉', '金',
+        '霂', '琬', '琰', '璎', '珞', '熹', '煜', '昉', '玥', '玦', '珺', '瑄', '玙', '璿', '琅', '珝', '琤', '瑢',
+        '婳', '媖', '婵', '姝', '娆', '嫣', '妩', '娉', '婷', '婉', '娩', '娴', '静', '淑', '慧', '悦', '忻', '恬',
+        '怡', '慕', '惜', '悠', '念', '怀', '蕙', '芷', '蘅', '薇', '荷', '莲', '蓉', '芙', '兰', '菊', '梅', '竹',
+        '松', '霜', '露', '霞', '霓', '月', '星', '辰', '曙', '宸', '翊', '璋', '瑞', '霖', '霆', '昂', '昱', '晟',
+        '晞', '晗', '曜', '明', '宣', '恒', '恺', '恪', '慎', '诚', '谦', '弘', '毅', '卓', '越', '轩', '博', '睿',
+        '哲', '翰', '飞', '鹏', '霄', '沧', '溟', '琪'
+            ],
+            fixedNames: ['今越', '占良', '笑川', '丽丽', '含章', '文约', '雪峰', '小川', '莉莉', '可贞', '晓华', '子涵', '雪弦', '思明',
+                '琳琳', '婉婉', '礼华', '有为', '休昭', '思远', '琪琪', '梦境', '梨花', '梦之', '明方', '沐雨', '思庄', '听允', '小南',
+                '冰冰', '沐昭', '柔柔', '小可', '香香', '景昀', '沐妍', '宁宁', '琉璃', '国瑾', '清明', '礼逊', '宝玉', '洋洋', '小红',
+                '媛容', '雪青', '蜜儿', '问舟', '思睿', '嘉然', '金娜', '嘉欣', '紫涵', '银娜', '佳欣', '明月', '丽瑶', '佳艺', '洵瑶',
+                '佳仪', '娇娇', '莉亚', '软软', '栗雅', '甜甜', '甜懿', '晓彤', '若桐', '若彤', '小桐', '小彤', '紫萱', '紫轩', '子璇',
+                '子萱', '则天', '泽天', '明珠', '文若', '梦境', '浩然', '俊杰', '元姬', '文姬', '建国', '秀英', '建华', '桂芳', '国庆', '玉兰', '志强', '秀珍', '卫东', '淑华', '跃进', '桂英', '红军', '秀兰', '永强', '玉珍', '长江', '凤英', '建设', '素珍','志刚', '丽华', '建军', '红梅', '立新', '春燕', '国强', '金凤', '海涛', '雪梅', '振华', '海燕', '文静', '春梅', '永刚', '玉梅', '向东', '冬梅', '朝阳', '秋菊','浩宇', '欣怡', '子轩', '梓涵', '雨泽', '诗涵', '浩然', '思琪', '宇航', '雅婷', '俊杰', '佳琪', '志远', '雨桐', '明轩', '梦瑶', '天佑', '欣妍', '文博', '可欣','梓睿', '若曦', '一诺', '雨欣', '子豪', '语嫣', '俊熙', '思彤', '铭泽', '晓彤', '博文', '紫萱', '昊然', '心怡', '天宇', '诗雨', '泽宇', '梦琪', '瑞霖', '嘉琪','梓豪', '芷晴', '奕辰', '乐瑶', '宇轩', '艺涵', '皓轩', '若琳', '泽洋', '慧琳', '俊宇', '雅琪', '泽楷', '婉婷', '铭轩', '悦心', '昊宇', '语桐', '睿哲', '静怡', '耀祖'
+            ],
+            // 古风女性模式专用字库
+            gufengSurnames: ['陆', '明', '李', '孙', '钱', '苏', '郑', '周', '吴', '褚', '张', '王', '冯', '蒋', '何', '沈', '陈',
+                '卫', '孔', '秦', '许', '韩', '朱', '葛', '魏', '杨', '吕', '范', '乐', '曹', '林', '金', '谢', '严', '水', '薛', '云',
+                '喻', '华', '窦', '杜', '潘', '柏', '陶', '裴', '鲁', '马', '姜', '阮', '方', '苗', '彭', '花', '兰', '柳', '俞', '郎',
+                '丰', '史', '安', '任', '韦', '廉', '顾', '常', '袁', '雷', '舒', '傅', '章', '费', '汤', '高', '姚', '唐', '罗', '夏',
+                '邵', '贺', '滕', '卞', '江', '穆', '郝', '殷', '伍', '郭', '萧', '时', '毕', '汪', '元', '齐', '余', '于', '谈', '和',
+                '康', '宋', '孟', '平', '戴', '纪', '董', '黄', '梁', '毛', '熊', '蓝', '田', '狄', '项', '凌', '盛', '成', '蔡', '颜',
+                '樊', '闵', '娄', '梅', '胡', '祁', '童', '钟', '万', '霍', '邱', '徐', '卢', '贾', '管', '宗', '路', '虞', '解', '骆',
+                '应', '房', '莫', '宣', '邓', '左', '石', '郁', '程', '桓', '楼'
+            ],
+            gufengSecondChars: [...GU_FENG_DEFAULT_CHARS],
+            gufengThirdChars: [...GU_FENG_DEFAULT_CHARS],
+            gufengFixedNames: ['子涵', '佳怡', '欣怡', '雨桐', '诗涵', '梦瑶', '若曦', '一诺', '徽瑜', '媛容','幽探', '萃芳', '沉鱼', '锦心', '文锦', '兰言', '淑媛', '丽娟', '瑞徵', '庆覃', '闺臣', '若花', '巧文', '宝云', '秀英', '书香', '良箴', '兰英', '墨香', '锦春', '舜英', '紫萱', '芳春', '红英', '题花', '紫芝', '小春', '青钿', '月芳', '娬儿', '丽蓉', '锦枫', '红蕖', '婉如', '熙春', '红薇', '紫琼', '春辉', '红萸', '紫樱', '玉蟾', '兰芝', '蘅香', '紫绡', '兰音', '芷馨', '紫菱', '凤翙', '红珠', '琼芳', '彩云', '尧蓂', '融春', '芸芝', '绿云', '宝钿', '艳春', '耕烟', '丽辉', '兰芳', '华芝', '锦云', '婉春', '月英', '花钿', '瑞春', '紫云', '玉芝', '月辉', '祥蓂', '秀春', '骊珠', '星辉', '琼英', '珠钿', '香云', '瑶芝', '乘珠', '秋辉', '瑶钗', '素云', '丽楼', '兰芬', '银蟾', '丽春', '芳芝', '绣田', '蕙芳', '琼芝', '素辉', '瑞蓂', '翠钿', '浦珠', '尧春', '小莺', '亚兰', '凤雏', '兰荪', '再芳', '全贞']
+        };
+
+        let data = loadData();
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('nameGenData');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    return {
+                        surnames: parsed.surnames || [...DEFAULT_DATA.surnames],
+                        secondChars: parsed.secondChars || [...DEFAULT_DATA.secondChars],
+                        thirdChars: parsed.thirdChars || [...DEFAULT_DATA.thirdChars],
+                        fixedNames: parsed.fixedNames || [...DEFAULT_DATA.fixedNames],
+                        gufengSurnames: parsed.gufengSurnames || [...DEFAULT_DATA.gufengSurnames],
+                        gufengSecondChars: parsed.gufengSecondChars || [...DEFAULT_DATA.gufengSecondChars],
+                        gufengThirdChars: parsed.gufengThirdChars || [...DEFAULT_DATA.gufengThirdChars],
+                        gufengFixedNames: parsed.gufengFixedNames || [...DEFAULT_DATA.gufengFixedNames]
+                    };
+                }
+            } catch (e) {}
+            return {
+                surnames: [...DEFAULT_DATA.surnames],
+                secondChars: [...DEFAULT_DATA.secondChars],
+                thirdChars: [...DEFAULT_DATA.thirdChars],
+                fixedNames: [...DEFAULT_DATA.fixedNames],
+                gufengSurnames: [...DEFAULT_DATA.gufengSurnames],
+                gufengSecondChars: [...DEFAULT_DATA.gufengSecondChars],
+                gufengThirdChars: [...DEFAULT_DATA.gufengThirdChars],
+                gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames]
+            };
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('nameGenData', JSON.stringify(data));
+            } catch (e) {}
+        }
+
+        // ============================================================
+        //  状态
+        // ============================================================
+        let currentMode = 'random';
+        let currentStyle = 'general';
+        let fixedSurname = '';
+        let fixedChar = '';
+        let fixedCharPosition = 'middle';
+
+        // ============================================================
+        //  姓氏权重（通用模式）
+        // ============================================================
+        const surnameWeights = {
+            '王': 100,
+            '李': 93,
+            '张': 89,
+            '刘': 68,
+            '陈': 64,
+            '杨': 44,
+            '黄': 32,
+            '赵': 27,
+            '徐': 27,
+            '吴': 26,
+            '周': 25,
+            '马': 25,
+            '孙': 26,
+            '胡': 22,
+            '朱': 21,
+            '郭': 20,
+            '何': 20,
+            '罗': 19,
+            '高': 18,
+            '林': 18
+        };
+        const DEFAULT_WEIGHT = 10;
+
+        function getWeightedSurname() {
+            if (fixedSurname) {
+                return fixedSurname;
+            }
+            const surnamePool = currentStyle === 'gufeng' ? data.gufengSurnames : data.surnames;
+            const weightedList = [];
+            for (const surname of surnamePool) {
+                const weight = surnameWeights[surname] || DEFAULT_WEIGHT;
+                for (let i = 0; i < weight; i++) {
+                    weightedList.push(surname);
+                }
+            }
+            return weightedList[Math.floor(Math.random() * weightedList.length)];
+        }
+
+        // ============================================================
+        //  通用生成逻辑
+        // ============================================================
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomElement(arr) {
+            if (arr.length === 0) return '?';
+            return arr[getRandomInt(0, arr.length - 1)];
+        }
+
+        function applyFixedChar(surname, second, third) {
+            if (fixedChar) {
+                if (fixedCharPosition === 'middle') {
+                    return surname + fixedChar + third;
+                } else {
+                    return surname + second + fixedChar;
+                }
+            }
+            return surname + second + third;
+        }
+
+        // ============================================================
+        //  古风女性生成逻辑（单字:双字 = 1:9）
+        // ============================================================
+        function generateGuFengName() {
+            const surname = getWeightedSurname();
+            const secondPool = data.gufengSecondChars;
+            const thirdPool = data.gufengThirdChars;
+
+            // 单字名：随机取1个字（10%概率）
+            if (currentMode === 'single' || (currentMode === 'random' && getRandomInt(1, 10) === 1)) {
+                const allChars = secondPool.concat(thirdPool);
+                const char = allChars[Math.floor(Math.random() * allChars.length)];
+                return surname + char;
+            }
+
+            // 双字名：随机取2个字（90%概率，包括 double 模式和 random 模式）
+            if (currentMode === 'double' || (currentMode === 'random' && getRandomInt(1, 100) <= 90)) {
+                const second = secondPool[Math.floor(Math.random() * secondPool.length)];
+                const third = thirdPool[Math.floor(Math.random() * thirdPool.length)];
+                return applyFixedChar(surname, second, third);
+            }
+
+            // 固定搭配：10%概率（仅在 random 模式下）
+            if (data.gufengFixedNames.length === 0) {
+                const second = secondPool[Math.floor(Math.random() * secondPool.length)];
+                const third = thirdPool[Math.floor(Math.random() * thirdPool.length)];
+                return applyFixedChar(surname, second, third);
+            }
+            const fixedName = data.gufengFixedNames[Math.floor(Math.random() * data.gufengFixedNames.length)];
+            const second = fixedName[0];
+            const third = fixedName[1];
+            return applyFixedChar(surname, second, third);
+        }
+
+        // ============================================================
+        //  主生成入口
+        // ============================================================
+        function generateName() {
+            if (currentStyle === 'ming') {
+                return generateMingName();
+            } else if (currentStyle === 'sanguo') {
+                return generateSanGuoName();
+            } else if (currentStyle === 'gufeng') {
+                return generateGuFengName();
+            } else {
+                // 通用模式
+                if (currentMode === 'single') {
+                    const surname = getWeightedSurname();
+                    const allChars = data.secondChars.concat(data.thirdChars);
+                    return surname + getRandomElement(allChars);
+                } else if (currentMode === 'double') {
+                    const surname = getWeightedSurname();
+                    const second = getRandomElement(data.secondChars);
+                    const third = getRandomElement(data.thirdChars);
+                    return applyFixedChar(surname, second, third);
+                } else {
+                    // random: 70% 双字, 20% 固定搭配, 10% 单字
+                    const roll = getRandomInt(1, 100);
+                    if (roll <= 70) {
+                        const surname = getWeightedSurname();
+                        const second = getRandomElement(data.secondChars);
+                        const third = getRandomElement(data.thirdChars);
+                        return applyFixedChar(surname, second, third);
+                    } else if (roll <= 90) {
+                        const surname = getWeightedSurname();
+                        if (data.fixedNames.length === 0) {
+                            const second = getRandomElement(data.secondChars);
+                            const third = getRandomElement(data.thirdChars);
+                            return applyFixedChar(surname, second, third);
+                        }
+                        const fixedName = getRandomElement(data.fixedNames);
+                        const second = fixedName[0];
+                        const third = fixedName[1];
+                        return applyFixedChar(surname, second, third);
+                    } else {
+                        const surname = getWeightedSurname();
+                        const allChars = data.secondChars.concat(data.thirdChars);
+                        return surname + getRandomElement(allChars);
+                    }
+                }
+            }
+        }
+
+        function generateBatch(count) {
+            const names = [];
+            for (let i = 0; i < count; i++) {
+                names.push(generateName());
+            }
+            return names;
+        }
+
+        // ============================================================
+        //  UI 渲染
+        // ============================================================
+        const resultGrid = document.getElementById('resultGrid');
+        const resultBadge = document.getElementById('resultBadge');
+
+        const surnameContainer = document.getElementById('surnameContainer');
+        const secondContainer = document.getElementById('secondContainer');
+        const thirdContainer = document.getElementById('thirdContainer');
+        const fixedContainer = document.getElementById('fixedContainer');
+
+        const surnameCount = document.getElementById('surnameCount');
+        const secondCount = document.getElementById('secondCount');
+        const thirdCount = document.getElementById('thirdCount');
+        const fixedCount = document.getElementById('fixedCount');
+
+        const surnameInput = document.getElementById('surnameInput');
+        const secondInput = document.getElementById('secondInput');
+        const thirdInput = document.getElementById('thirdInput');
+        const fixedInput = document.getElementById('fixedInput');
+
+        const libToggle = document.getElementById('libToggle');
+        const libPanel = document.getElementById('libPanel');
+        const panelHint = document.getElementById('panelHint');
+
+        const fixedSurnameInput = document.getElementById('fixedSurnameInput');
+        const confirmSurnameBtn = document.getElementById('confirmSurnameBtn');
+        const clearSurnameBtn = document.getElementById('clearSurnameBtn');
+        const fixedStatus = document.getElementById('fixedStatus');
+
+        const fixedCharInput = document.getElementById('fixedCharInput');
+        const fixedCharPositionSelect = document.getElementById('fixedCharPosition');
+        const confirmCharBtn = document.getElementById('confirmCharBtn');
+        const clearCharBtn = document.getElementById('clearCharBtn');
+        const fixedCharStatus = document.getElementById('fixedCharStatus');
+
+        const statusHint = document.getElementById('statusHint');
+        const styleSelect = document.getElementById('styleSelect');
+        const styleHint = document.getElementById('styleHint');
+        const fixedSection = document.getElementById('fixedSection');
+        const modeGroup = document.getElementById('modeGroup');
+        const modeLabel = document.getElementById('modeLabel');
+
+        function renderAll() {
+            const isGuFeng = currentStyle === 'gufeng';
+
+            if (isGuFeng) {
+                // 古风女性模式：显示古风字库（可编辑）
+                renderTags(surnameContainer, data.gufengSurnames, 'gufeng_surname');
+                renderTags(secondContainer, data.gufengSecondChars, 'gufeng_second');
+                renderTags(thirdContainer, data.gufengThirdChars, 'gufeng_third');
+                renderTags(fixedContainer, data.gufengFixedNames, 'gufeng_fixed');
+
+                surnameCount.textContent = data.gufengSurnames.length;
+                secondCount.textContent = data.gufengSecondChars.length;
+                thirdCount.textContent = data.gufengThirdChars.length;
+                fixedCount.textContent = data.gufengFixedNames.length;
+            } else {
+                // 其他模式：显示通用字库
+                renderTags(surnameContainer, data.surnames, 'surname');
+                renderTags(secondContainer, data.secondChars, 'second');
+                renderTags(thirdContainer, data.thirdChars, 'third');
+                renderTags(fixedContainer, data.fixedNames, 'fixed');
+
+                surnameCount.textContent = data.surnames.length;
+                secondCount.textContent = data.secondChars.length;
+                thirdCount.textContent = data.thirdChars.length;
+                fixedCount.textContent = data.fixedNames.length;
+            }
+
+            saveData();
+            updateUI();
+        }
+
+        function renderTags(container, items, type) {
+            if (!items || items.length === 0) {
+                container.innerHTML = '<span style="color:#b8a08a;font-size:0.7rem;">（空）</span>';
+                return;
+            }
+            container.innerHTML = items.map((item, index) => {
+                return `<span class="tag">
+                    ${item}
+                    <button class="del-btn" onclick="deleteItem('${type}', ${index})">✕</button>
+                </span>`;
+            }).join('');
+        }
+
+        function updateUI() {
+            const isMing = currentStyle === 'ming';
+            const isSanGuo = currentStyle === 'sanguo';
+            const isGuFeng = currentStyle === 'gufeng';
+
+            if (isMing) {
+                styleHint.textContent = '🫅 朱氏皇室';
+                fixedSection.classList.add('hidden');
+                modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.add('disabled'));
+                modeLabel.textContent = '模 式（明朝宗室下固定三字名）';
+                libPanel.classList.add('hidden');
+                panelHint.classList.add('show');
+                panelHint.textContent = '🫅 明朝宗室风格下字库管理不可用';
+            } else if (isSanGuo) {
+                styleHint.textContent = '⚔️ 三国两晋';
+                fixedSection.classList.add('hidden');
+                modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.add('disabled'));
+                modeLabel.textContent = '模 式（三国两晋下固定格式）';
+                libPanel.classList.add('hidden');
+                panelHint.classList.add('show');
+                panelHint.textContent = '⚔️ 三国两晋风格下字库管理不可用';
+            } else if (isGuFeng) {
+                styleHint.textContent = '🌸 古风女性';
+                fixedSection.classList.remove('hidden');
+                modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('disabled'));
+                modeLabel.textContent = '模 式';
+                libPanel.classList.remove('hidden');
+                panelHint.classList.remove('show');
+            } else {
+                styleHint.textContent = '自由组合';
+                fixedSection.classList.remove('hidden');
+                modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('disabled'));
+                modeLabel.textContent = '模 式';
+                libPanel.classList.remove('hidden');
+                panelHint.classList.remove('show');
+            }
+
+            updateStatusHint();
+        }
+
+        function updateStatusHint() {
+            const isMing = currentStyle === 'ming';
+            const isSanGuo = currentStyle === 'sanguo';
+            const isGuFeng = currentStyle === 'gufeng';
+
+            if (isMing) {
+                statusHint.textContent = '明朝宗室：固定朱姓，字辈+五行尾字';
+                fixedStatus.textContent = '（明朝宗室风格下固定为朱姓）';
+                fixedStatus.className = 'fixed-status';
+                fixedCharStatus.textContent = '（明朝宗室风格下由字辈决定）';
+                fixedCharStatus.className = 'fixed-char-status';
+                return;
+            }
+
+            if (isSanGuo) {
+                statusHint.textContent = '三国两晋：姓氏 + 名（带权重）';
+                fixedStatus.textContent = '（三国两晋风格下固定姓氏不可用）';
+                fixedStatus.className = 'fixed-status';
+                fixedCharStatus.textContent = '（三国两晋风格下固定字不可用）';
+                fixedCharStatus.className = 'fixed-char-status';
+                return;
+            }
+
+            if (isGuFeng) {
+                const modeMap = {
+                    'single': '单字名',
+                    'double': '双字名',
+                    'random': '随机'
+                };
+                let hint = '当前模式：' + (modeMap[currentMode] || '随机');
+                if (fixedSurname) {
+                    hint += ' | 固定姓氏：' + fixedSurname;
+                }
+                if (fixedChar) {
+                    const posMap = { 'middle': '中间字', 'end': '末尾字' };
+                    hint += ' | 固定' + posMap[fixedCharPosition] + '：' + fixedChar;
+                }
+                statusHint.textContent = hint;
+                fixedStatus.textContent = fixedSurname ? '✅ 已固定：' + fixedSurname : '未设置固定姓氏';
+                fixedStatus.className = fixedSurname ? 'fixed-status active' : 'fixed-status';
+                fixedCharStatus.textContent = fixedChar ? '✅ 已固定' + (fixedCharPosition === 'middle' ? '中间字' : '末尾字') + '：' + fixedChar : '未设置固定字';
+                fixedCharStatus.className = fixedChar ? 'fixed-char-status active' : 'fixed-char-status';
+                return;
+            }
+
+            const modeMap = {
+                'single': '单字名',
+                'double': '双字名',
+                'random': '随机'
+            };
+            let hint = '当前模式：' + (modeMap[currentMode] || '随机');
+            if (fixedSurname) {
+                hint += ' | 固定姓氏：' + fixedSurname;
+            }
+            if (fixedChar) {
+                const posMap = { 'middle': '中间字', 'end': '末尾字' };
+                hint += ' | 固定' + posMap[fixedCharPosition] + '：' + fixedChar;
+            }
+            statusHint.textContent = hint;
+
+            if (fixedSurname) {
+                fixedStatus.textContent = '✅ 已固定：' + fixedSurname;
+                fixedStatus.className = 'fixed-status active';
+            } else {
+                fixedStatus.textContent = '未设置固定姓氏';
+                fixedStatus.className = 'fixed-status';
+            }
+
+            if (fixedChar) {
+                const posMap = { 'middle': '中间字', 'end': '末尾字' };
+                fixedCharStatus.textContent = '✅ 已固定' + posMap[fixedCharPosition] + '：' + fixedChar;
+                fixedCharStatus.className = 'fixed-char-status active';
+            } else {
+                fixedCharStatus.textContent = '未设置固定字';
+                fixedCharStatus.className = 'fixed-char-status';
+            }
+        }
+
+        // ============================================================
+        //  显示结果
+        // ============================================================
+        function showResults(items) {
+            if (!items || items.length === 0) {
+                resultGrid.innerHTML = '<div class="result-empty">点击左侧按钮生成名字</div>';
+                resultBadge.textContent = '0 个';
+                return;
+            }
+
+            const isMingResult = items[0] && typeof items[0] === 'object' && items[0].name !== undefined && items[0].branch !== undefined;
+
+            if (isMingResult) {
+                const showLineage = items.length <= 10;
+                resultGrid.innerHTML = items.map(function(item) {
+                    let html = '<div class="result-item">';
+                    html += '<div class="result-name">' + item.name + '</div>';
+                    if (showLineage) {
+                        const lineage = getLineageText(item);
+                        html += '<div class="result-lineage">' + item.branch + '后裔，' + lineage + '</div>';
+                    }
+                    html += '</div>';
+                    return html;
+                }).join('');
+            } else {
+                resultGrid.innerHTML = items.map(function(name) {
+                    return '<div class="result-item"><div class="result-name">' + name + '</div></div>';
+                }).join('');
+            }
+
+            resultBadge.textContent = items.length + ' 个';
+        }
+
+        function generateAndShow(count) {
+            const results = generateBatch(count);
+            showResults(results);
+        }
+
+        // ============================================================
+        //  增删操作
+        // ============================================================
+        function deleteItem(type, index) {
+            const isGuFeng = type.startsWith('gufeng_');
+            const keyMap = {
+                'surname': 'surnames',
+                'second': 'secondChars',
+                'third': 'thirdChars',
+                'fixed': 'fixedNames',
+                'gufeng_surname': 'gufengSurnames',
+                'gufeng_second': 'gufengSecondChars',
+                'gufeng_third': 'gufengThirdChars',
+                'gufeng_fixed': 'gufengFixedNames'
+            };
+            const key = keyMap[type];
+            if (!key) return;
+            data[key].splice(index, 1);
+            renderAll();
+        }
+
+        function addSurname() {
+            const isGuFeng = currentStyle === 'gufeng';
+            const pool = isGuFeng ? data.gufengSurnames : data.surnames;
+            const val = surnameInput.value.trim();
+            if (!val) return alert('请输入姓氏');
+            if (val.length > 1) return alert('姓氏只能输入一个字');
+            if (pool.includes(val)) return alert('该姓氏已存在');
+            pool.push(val);
+            surnameInput.value = '';
+            renderAll();
+        }
+
+        function addSecond() {
+            const isGuFeng = currentStyle === 'gufeng';
+            const pool = isGuFeng ? data.gufengSecondChars : data.secondChars;
+            const val = secondInput.value.trim();
+            if (!val) return alert('请输入一个字');
+            if (val.length > 1) return alert('只能输入一个字');
+            if (pool.includes(val)) return alert('该字已存在');
+            pool.push(val);
+            secondInput.value = '';
+            renderAll();
+        }
+
+        function addThird() {
+            const isGuFeng = currentStyle === 'gufeng';
+            const pool = isGuFeng ? data.gufengThirdChars : data.thirdChars;
+            const val = thirdInput.value.trim();
+            if (!val) return alert('请输入一个字');
+            if (val.length > 1) return alert('只能输入一个字');
+            if (pool.includes(val)) return alert('该字已存在');
+            pool.push(val);
+            thirdInput.value = '';
+            renderAll();
+        }
+
+        function addFixed() {
+            const isGuFeng = currentStyle === 'gufeng';
+            const pool = isGuFeng ? data.gufengFixedNames : data.fixedNames;
+            const val = fixedInput.value.trim();
+            if (!val) return alert('请输入二字名');
+            if (val.length !== 2) return alert('固定搭配必须是两个字');
+            if (pool.includes(val)) return alert('该搭配已存在');
+            pool.push(val);
+            fixedInput.value = '';
+            renderAll();
+        }
+
+        window.addSurname = addSurname;
+        window.addSecond = addSecond;
+        window.addThird = addThird;
+        window.addFixed = addFixed;
+        window.deleteItem = deleteItem;
+
+        surnameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') addSurname(); });
+        secondInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') addSecond(); });
+        thirdInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') addThird(); });
+        fixedInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') addFixed(); });
+
+        // ============================================================
+        //  固定姓氏
+        // ============================================================
+        function confirmSurname() {
+            if (currentStyle === 'ming' || currentStyle === 'sanguo') {
+                alert('当前风格下不支持固定姓氏');
+                return;
+            }
+            const val = fixedSurnameInput.value.trim();
+            if (!val) {
+                alert('请先输入姓氏');
+                return;
+            }
+            if (val.length > 5) {
+                alert('姓氏最多5个字');
+                return;
+            }
+            fixedSurname = val;
+            updateStatusHint();
+        }
+
+        confirmSurnameBtn.addEventListener('click', confirmSurname);
+
+        fixedSurnameInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                confirmSurname();
+            }
+        });
+
+        clearSurnameBtn.addEventListener('click', function() {
+            fixedSurnameInput.value = '';
+            fixedSurname = '';
+            updateStatusHint();
+        });
+
+        // ============================================================
+        //  固定字
+        // ============================================================
+        function confirmChar() {
+            if (currentStyle === 'ming' || currentStyle === 'sanguo') {
+                alert('当前风格下不支持固定字');
+                return;
+            }
+            const val = fixedCharInput.value.trim();
+            if (!val) {
+                alert('请先输入一个字');
+                return;
+            }
+            if (val.length > 1) {
+                alert('只能输入一个字');
+                return;
+            }
+            fixedChar = val;
+            fixedCharPosition = fixedCharPositionSelect.value;
+            updateStatusHint();
+        }
+
+        confirmCharBtn.addEventListener('click', confirmChar);
+
+        fixedCharInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                confirmChar();
+            }
+        });
+
+        fixedCharPositionSelect.addEventListener('change', function() {
+            if (fixedChar) {
+                fixedCharPosition = this.value;
+                updateStatusHint();
+            }
+        });
+
+        clearCharBtn.addEventListener('click', function() {
+            fixedCharInput.value = '';
+            fixedChar = '';
+            updateStatusHint();
+        });
+
+        // ============================================================
+        //  风格切换
+        // ============================================================
+        styleSelect.addEventListener('change', function() {
+            currentStyle = this.value;
+            if (currentStyle === 'ming' || currentStyle === 'sanguo') {
+                fixedSurname = '';
+                fixedSurnameInput.value = '';
+                fixedChar = '';
+                fixedCharInput.value = '';
+            }
+            renderAll();
+            generateAndShow(1);
+        });
+
+        // ============================================================
+        //  模式切换
+        // ============================================================
+        document.querySelectorAll('.mode-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                if (this.classList.contains('disabled')) return;
+                document.querySelectorAll('.mode-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                currentMode = this.dataset.mode;
+                updateStatusHint();
+            });
+        });
+
+        // ============================================================
+        //  重置
+        // ============================================================
+        function resetAll() {
+            if (!confirm('确定要恢复所有字库到默认状态吗？（当前数据将丢失）')) return;
+            data = {
+                surnames: [...DEFAULT_DATA.surnames],
+                secondChars: [...DEFAULT_DATA.secondChars],
+                thirdChars: [...DEFAULT_DATA.thirdChars],
+                fixedNames: [...DEFAULT_DATA.fixedNames],
+                gufengSurnames: [...DEFAULT_DATA.gufengSurnames],
+                gufengSecondChars: [...DEFAULT_DATA.gufengSecondChars],
+                gufengThirdChars: [...DEFAULT_DATA.gufengThirdChars],
+                gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames]
+            };
+            renderAll();
+            fixedSurname = '';
+            fixedSurnameInput.value = '';
+            fixedChar = '';
+            fixedCharInput.value = '';
+            updateStatusHint();
+        }
+        window.resetAll = resetAll;
+
+        // ============================================================
+        //  字库面板折叠
+        // ============================================================
+        let libOpen = true;
+        libToggle.addEventListener('click', function() {
+            libOpen = !libOpen;
+            const sections = libPanel.querySelectorAll('.lib-section, .lib-reset');
+            sections.forEach(function(el) {
+                el.style.display = libOpen ? '' : 'none';
+            });
+            libToggle.textContent = libOpen ? '▾' : '▸';
+        });
+
+        // ============================================================
+        //  按钮事件
+        // ============================================================
+        document.getElementById('btnGen1').addEventListener('click', function() {
+            generateAndShow(1);
+        });
+        document.getElementById('btnGen10').addEventListener('click', function() {
+            generateAndShow(10);
+        });
+        document.getElementById('btnGen50').addEventListener('click', function() {
+            generateAndShow(50);
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' || e.key === 'Enter') {
+                if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+                e.preventDefault();
+                generateAndShow(1);
+            }
+        });
+
+        // ============================================================
+        //  初始化
+        // ============================================================
+        renderAll();
+        showResults([]);
+
+        console.log('✅ 字库管理已加载！');
+        console.log('✅ 通用模式已就绪，明朝宗室模式已就绪，三国两晋模式已就绪，古风女性模式已就绪！');
+        console.log('✅ 古风女性模式：字库可编辑，单字:双字:固定搭配 = 1:7:2');
+        console.log('✅ 切换风格下拉菜单体验不同生成逻辑。');
+    </script>
+</body>
+</html>
