@@ -344,41 +344,135 @@
             color: #4a8a7a;
         }
 
-        .btn-gen {
+        /* ✅ 修改：快速生成按钮行 - 三个小正方形按钮横排 */
+        .quick-gen-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .btn-gen-small {
             background: #e07a3f;
             border: none;
             color: white;
             font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
             font-weight: 700;
-            font-size: 1.05rem;
-            letter-spacing: 1px;
-            padding: 12px 0;
-            border-radius: 40px;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            min-height: 52px;
+            border-radius: 12px;
             cursor: pointer;
-            box-shadow: 0 12px 20px -10px #c15f2a, 0 4px 0 #8f421a;
+            box-shadow: 0 4px 10px -4px #c15f2a, 0 3px 0 #8f421a;
             transition: all 0.12s ease;
             border: 2px solid #ffc9a3;
-            width: 100%;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+            padding: 0;
         }
 
-        .btn-gen:active {
-            transform: translateY(4px);
-            box-shadow: 0 6px 12px -6px #b9552a, 0 2px 0 #7a3517;
+        .btn-gen-small:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 6px -3px #b9552a, 0 1px 0 #7a3517;
         }
 
-        .btn-gen:hover {
+        .btn-gen-small:hover {
             background: #e9894f;
         }
 
-        .btn-gen .icon {
-            font-size: 1.1rem;
+        .btn-gen-small .icon {
+            font-size: 0.9rem;
             display: block;
-            margin-bottom: 1px;
+            margin-bottom: 0;
         }
-        .btn-gen .count-label {
-            font-size: 0.85rem;
+
+        .btn-gen-small .count-label {
+            font-size: 0.7rem;
             opacity: 0.9;
+            display: block;
+        }
+
+        .custom-count-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-top: 2px;
+        }
+
+        .custom-count-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e8ddd0;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            background: white;
+            outline: none;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            text-align: center;
+            transition: border-color 0.2s;
+            min-width: 0;
+        }
+
+        .custom-count-row input:focus {
+            border-color: #e07a3f;
+        }
+
+        .custom-count-row button {
+            background: #e07a3f;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            transition: all 0.12s;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .custom-count-row button:hover {
+            background: #c96932;
+        }
+
+        .custom-count-row button:active {
+            transform: scale(0.95);
+        }
+
+        .export-row {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .export-btn {
+            flex: 1;
+            background: #4a8a7a;
+            border: none;
+            color: white;
+            padding: 8px 0;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            transition: all 0.12s;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .export-btn:hover {
+            background: #3a7a6a;
+        }
+
+        .export-btn:active {
+            transform: scale(0.95);
         }
 
         .status-hint {
@@ -755,13 +849,26 @@
                 padding: 6px 0;
                 min-width: 40px;
             }
-            .btn-gen {
-                max-width: 100px;
-                padding: 8px 0;
-                font-size: 0.9rem;
+            .btn-gen-small {
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                min-height: 44px;
+                font-size: 0.8rem;
             }
-            .btn-gen .icon {
-                font-size: 0.9rem;
+            .btn-gen-small .icon {
+                font-size: 0.8rem;
+            }
+            .btn-gen-small .count-label {
+                font-size: 0.6rem;
+            }
+            .custom-count-row {
+                flex: 1;
+                min-width: 120px;
+            }
+            .export-row {
+                flex: 1;
+                min-width: 200px;
             }
             .right-panel {
                 max-height: 340px;
@@ -833,13 +940,31 @@
                 padding: 4px 0;
                 min-width: 32px;
             }
-            .btn-gen {
-                max-width: 70px;
-                padding: 6px 0;
-                font-size: 0.75rem;
-            }
-            .btn-gen .icon {
+            .btn-gen-small {
+                width: 38px;
+                height: 38px;
+                min-width: 38px;
+                min-height: 38px;
                 font-size: 0.7rem;
+                border-radius: 8px;
+            }
+            .btn-gen-small .icon {
+                font-size: 0.7rem;
+            }
+            .btn-gen-small .count-label {
+                font-size: 0.55rem;
+            }
+            .custom-count-row input {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            .custom-count-row button {
+                padding: 6px 10px;
+                font-size: 0.7rem;
+            }
+            .export-btn {
+                font-size: 0.6rem;
+                padding: 6px 0;
             }
             .right-panel {
                 max-height: 260px;
@@ -954,18 +1079,32 @@
 
             <div style="flex:1; min-height:4px;"></div>
 
-            <button class="btn-gen" id="btnGen1">
-                <span class="icon">🎲</span>
-                <span class="count-label">1 个</span>
-            </button>
-            <button class="btn-gen" id="btnGen10">
-                <span class="icon">📋</span>
-                <span class="count-label">10 个</span>
-            </button>
-            <button class="btn-gen" id="btnGen50">
-                <span class="icon">📋</span>
-                <span class="count-label">50 个</span>
-            </button>
+            <!-- ✅ 修改：三个小正方形按钮横排 -->
+            <div class="quick-gen-row">
+                <button class="btn-gen-small" id="btnGen1">
+                    <span class="icon">🎲</span>
+                    <span class="count-label">1</span>
+                </button>
+                <button class="btn-gen-small" id="btnGen10">
+                    <span class="icon">📋</span>
+                    <span class="count-label">10</span>
+                </button>
+                <button class="btn-gen-small" id="btnGen50">
+                    <span class="icon">📋</span>
+                    <span class="count-label">50</span>
+                </button>
+            </div>
+
+            <div class="custom-count-row">
+                <input type="number" id="customCountInput" placeholder="自定义数量" min="1" max="5000" value="100">
+                <button id="btnGenCustom">生成</button>
+            </div>
+
+            <div class="export-row">
+                <button class="export-btn" id="btnExportTxt">导出TXT</button>
+                <button class="export-btn" id="btnExportCsv">导出Excel</button>
+                <button class="export-btn" id="btnCopy">复制</button>
+            </div>
         </div>
 
         <!-- ===== 中栏 ===== -->
@@ -1082,7 +1221,7 @@
         //  三国两晋数据
         // ============================================================
 
-        const SAN_GUO_SURNAMES = [
+        const SAN_GUO_DEFAULT_SURNAMES = [
             '王', '曹', '孙', '刘', '夏侯', '董', '郭', '荀', '诸葛', '伊', '程', '顾', '陆', '朱', '张', '周', '吕', '李',
             '傅', '徐', '许', '司马', '邓', '陈', '马', '裴', '杨', '袁', '鲁', '郝', '赵', '高堂', '凌', '甘', '黄', '关',
             '骆', '丁', '毌丘', '唐', '仓', '阚', '辛', '卞', '于', '钟', '韩', '史', '文', '羊', '庞', '杜', '嵇', '毛',
@@ -1091,8 +1230,8 @@
             '糜', '麹', '颜', '谯', '来', '霍', '吴', '虞', '全', '濮阳', '和', '温', '简', '彭', '宗', '是', '钟离'
         ];
 
-        const SAN_GUO_GIVEN = [
-         '操', '丕', '植', '嘉', '玄', '云', '羽', '懿', '辽', '籍', '昱', '雍', '逊', '然', '昭', '瑜', '恪', '瑾', '儒', '尚', '褚', '仁', '渊', '韦', '毓', '彧', '晃', '郃', '艾', '典', '宫', '群', '谌', '超', '秀', '修', '肃', '师', '干', '芝', '隆', '协', '奕', '忠', '宁', '统', '奉', '机', '盛', '荣', '卓', '节', '衡', '丰', '整', '虔', '慈', '邈', '洪', '叡', '辩', '瓒', '康', '攸', '诩', '髦', '茂', '颙', '泽', '禁', '会', '宠', '冲', '淮', '真', '浩', '涣', '繇', '资', '放', '诞', '昂', '进', '聘', '朗', '术', '恕', '济', '畿', '恭', '玠', '晔', '灵', '谦', '班', '霸', '纯', '钧', '金', '越', '良', '圭', '昶', '范', '楷', '爽', '羲', '豫', '粲', '歆', '双', '琰', '燕', '休', '彰', '琳', '逵', '嵩', '业', '经', '孚', '阜', '既', '伯', '招', '咨', '延', '维', '禅', '颜', '瞻', '到', '祎', '琬', '靖', '备', '飞', '亮', '正', '谡', '兴', '苞', '化', '封', '泰', '赞', '权', '策', '盖', '坚', '蒙', '温', '钦', '当', '普', '璋', '治', '登', '综', '基', '绩', '齐', '骘', '濬', '岱', '畯', '芳', '抗', '韶', '峻', '綝', '邵', '处', '景', '繁', '琮', '皓', '奋', '嶷', '严', '宓', '乾', '竺', '允', '仪', '凯', '平', '祗', '巴', '肜', '佥', '周', '广', '遗', '敏', '丑', '表', '授', '纪', '图', '虞', '让', '完', '凤', '邕', '琦', '鲁', '就', '腾', '任', '弘', '祖', '顺', '预', '绍', '祜', '徽', '配', '焉', '原', '彪', '融', '充', '承', '腾', '嵩', '冏', '穆', '殷', '询', '淑', '喈', '寻', '蕤', '鉴', '霖', '启', '礼', '邕', '贡', '俨', '苗', '熊', '炳', '铄', '潜', '偃', '据', '琮', '阐', '宇', '奂', '纬', '恒', '壹', '衮', '孚', '玹', '澳', '矩', '勤', '乘', '京', '均', '抗', '琬', '廉', '焜', '棘', '翕', '琨', '竦', '宪', '华', '甝', '霬', '憺', '恺', '悝', '晏', '爽', '羲', '训', '则', '彦', '皑', '熙', '彬', '璠', '峤', '郁', '德', '玉', '安民', '泰', '初', '炽', '演', '亮', '胤', '馥', '鼎', '震', '肇', '识', '毗', '摅', '纂',
+        const SAN_GUO_DEFAULT_GIVEN = [
+            '操', '丕', '植', '嘉', '玄', '云', '羽', '懿', '辽', '籍', '昱', '雍', '逊', '然', '昭', '瑜', '恪', '瑾', '儒', '尚', '褚', '仁', '渊', '韦', '毓', '彧', '晃', '郃', '艾', '典', '宫', '群', '谌', '超', '秀', '修', '肃', '师', '干', '芝', '隆', '协', '奕', '忠', '宁', '统', '奉', '机', '盛', '荣', '卓', '节', '衡', '丰', '整', '虔', '慈', '邈', '洪', '叡', '辩', '瓒', '康', '攸', '诩', '髦', '茂', '颙', '泽', '禁', '会', '宠', '冲', '淮', '真', '浩', '涣', '繇', '资', '放', '诞', '昂', '进', '聘', '朗', '术', '恕', '济', '畿', '恭', '玠', '晔', '灵', '谦', '班', '霸', '纯', '钧', '金', '越', '良', '圭', '昶', '范', '楷', '爽', '羲', '豫', '粲', '歆', '双', '琰', '燕', '休', '彰', '琳', '逵', '嵩', '业', '经', '孚', '阜', '既', '伯', '招', '咨', '延', '维', '禅', '颜', '瞻', '到', '祎', '琬', '靖', '备', '飞', '亮', '正', '谡', '兴', '苞', '化', '封', '泰', '赞', '权', '策', '盖', '坚', '蒙', '温', '钦', '当', '普', '璋', '治', '登', '综', '基', '绩', '齐', '骘', '濬', '岱', '畯', '芳', '抗', '韶', '峻', '綝', '邵', '处', '景', '繁', '琮', '皓', '奋', '嶷', '严', '宓', '乾', '竺', '允', '仪', '凯', '平', '祗', '巴', '肜', '佥', '周', '广', '遗', '敏', '丑', '表', '授', '纪', '图', '虞', '让', '完', '凤', '邕', '琦', '鲁', '就', '腾', '任', '弘', '祖', '顺', '预', '绍', '祜', '徽', '配', '焉', '原', '彪', '融', '充', '承', '腾', '嵩', '冏', '穆', '殷', '询', '淑', '喈', '寻', '蕤', '鉴', '霖', '启', '礼', '邕', '贡', '俨', '苗', '熊', '炳', '铄', '潜', '偃', '据', '琮', '阐', '宇', '奂', '纬', '恒', '壹', '衮', '孚', '玹', '澳', '矩', '勤', '乘', '京', '均', '抗', '琬', '廉', '焜', '棘', '翕', '琨', '竦', '宪', '华', '甝', '霬', '憺', '恺', '悝', '晏', '爽', '羲', '训', '则', '彦', '皑', '熙', '彬', '璠', '峤', '郁', '德', '玉', '安民', '泰', '初', '炽', '演', '亮', '胤', '馥', '鼎', '震', '肇', '识', '毗', '摅', '纂'
         ];
 
         const SAN_GUO_WEIGHT_HIGH = new Set(['曹', '孙', '刘', '夏侯', '诸葛', '司马', '荀', '马', '王', '关', '张', '陆']);
@@ -1100,8 +1239,9 @@
         const SAN_GUO_WEIGHT_HIGH_VALUE = 200;
 
         function getWeightedSanGuoSurname() {
+            const surnamePool = data.sanguoSurnames;
             const weightedList = [];
-            for (const surname of SAN_GUO_SURNAMES) {
+            for (const surname of surnamePool) {
                 const weight = SAN_GUO_WEIGHT_HIGH.has(surname) ? SAN_GUO_WEIGHT_HIGH_VALUE : SAN_GUO_WEIGHT_DEFAULT;
                 for (let i = 0; i < weight; i++) {
                     weightedList.push(surname);
@@ -1111,8 +1251,8 @@
         }
 
         function generateSanGuoName() {
-            const surname = getWeightedSanGuoSurname();
-            const given = SAN_GUO_GIVEN[Math.floor(Math.random() * SAN_GUO_GIVEN.length)];
+            const surname = fixedSurname || getWeightedSanGuoSurname();
+            const given = data.sanguoGiven[Math.floor(Math.random() * data.sanguoGiven.length)];
             return surname + given;
         }
 
@@ -1307,7 +1447,6 @@
                 '佳仪', '娇娇', '莉亚', '软软', '栗雅', '甜甜', '甜懿', '晓彤', '若桐', '若彤', '小桐', '小彤', '紫萱', '紫轩', '子璇',
                 '子萱', '则天', '泽天', '明珠', '文若', '梦境', '浩然', '俊杰', '元姬', '文姬', '建国', '秀英', '建华', '桂芳', '国庆', '玉兰', '志强', '秀珍', '卫东', '淑华', '跃进', '桂英', '红军', '秀兰', '永强', '玉珍', '长江', '凤英', '建设', '素珍','志刚', '丽华', '建军', '红梅', '立新', '春燕', '国强', '金凤', '海涛', '雪梅', '振华', '海燕', '文静', '春梅', '永刚', '玉梅', '向东', '冬梅', '朝阳', '秋菊','浩宇', '欣怡', '子轩', '梓涵', '雨泽', '诗涵', '浩然', '思琪', '宇航', '雅婷', '俊杰', '佳琪', '志远', '雨桐', '明轩', '梦瑶', '天佑', '欣妍', '文博', '可欣','梓睿', '若曦', '一诺', '雨欣', '子豪', '语嫣', '俊熙', '思彤', '铭泽', '晓彤', '博文', '紫萱', '昊然', '心怡', '天宇', '诗雨', '泽宇', '梦琪', '瑞霖', '嘉琪','梓豪', '芷晴', '奕辰', '乐瑶', '宇轩', '艺涵', '皓轩', '若琳', '泽洋', '慧琳', '俊宇', '雅琪', '泽楷', '婉婷', '铭轩', '悦心', '昊宇', '语桐', '睿哲', '静怡', '耀祖'
             ],
-            // 古风女性模式专用字库
             gufengSurnames: ['陆', '明', '李', '孙', '钱', '苏', '郑', '周', '吴', '褚', '张', '王', '冯', '蒋', '何', '沈', '陈',
                 '卫', '孔', '秦', '许', '韩', '朱', '葛', '魏', '杨', '吕', '范', '乐', '曹', '林', '金', '谢', '严', '水', '薛', '云',
                 '喻', '华', '窦', '杜', '潘', '柏', '陶', '裴', '鲁', '马', '姜', '阮', '方', '苗', '彭', '花', '兰', '柳', '俞', '郎',
@@ -1315,11 +1454,13 @@
                 '邵', '贺', '滕', '卞', '江', '穆', '郝', '殷', '伍', '郭', '萧', '时', '毕', '汪', '元', '齐', '余', '于', '谈', '和',
                 '康', '宋', '孟', '平', '戴', '纪', '董', '黄', '梁', '毛', '熊', '蓝', '田', '狄', '项', '凌', '盛', '成', '蔡', '颜',
                 '樊', '闵', '娄', '梅', '胡', '祁', '童', '钟', '万', '霍', '邱', '徐', '卢', '贾', '管', '宗', '路', '虞', '解', '骆',
-                '应', '房', '莫', '宣', '邓', '左', '石', '郁', '程', '桓', '楼'
+                '应', '房', '莫', '宣', '邓', '左', '石', '郁', '程', '桓'
             ],
             gufengSecondChars: [...GU_FENG_DEFAULT_CHARS],
             gufengThirdChars: [...GU_FENG_DEFAULT_CHARS],
-            gufengFixedNames: ['子涵', '佳怡', '欣怡', '雨桐', '诗涵', '梦瑶', '若曦', '一诺', '徽瑜', '媛容','幽探', '萃芳', '沉鱼', '锦心', '文锦', '兰言', '淑媛', '丽娟', '瑞徵', '庆覃', '闺臣', '若花', '巧文', '宝云', '秀英', '书香', '良箴', '兰英', '墨香', '锦春', '舜英', '紫萱', '芳春', '红英', '题花', '紫芝', '小春', '青钿', '月芳', '娬儿', '丽蓉', '锦枫', '红蕖', '婉如', '熙春', '红薇', '紫琼', '春辉', '红萸', '紫樱', '玉蟾', '兰芝', '蘅香', '紫绡', '兰音', '芷馨', '紫菱', '凤翙', '红珠', '琼芳', '彩云', '尧蓂', '融春', '芸芝', '绿云', '宝钿', '艳春', '耕烟', '丽辉', '兰芳', '华芝', '锦云', '婉春', '月英', '花钿', '瑞春', '紫云', '玉芝', '月辉', '祥蓂', '秀春', '骊珠', '星辉', '琼英', '珠钿', '香云', '瑶芝', '乘珠', '秋辉', '瑶钗', '素云', '丽楼', '兰芬', '银蟾', '丽春', '芳芝', '绣田', '蕙芳', '琼芝', '素辉', '瑞蓂', '翠钿', '浦珠', '尧春', '小莺', '亚兰', '凤雏', '兰荪', '再芳', '全贞']
+            gufengFixedNames: ['子涵', '梓轩', '俊杰', '佳怡', '欣怡', '雨桐', '诗涵', '梦瑶', '若曦', '一诺'],
+            sanguoSurnames: [...SAN_GUO_DEFAULT_SURNAMES],
+            sanguoGiven: [...SAN_GUO_DEFAULT_GIVEN]
         };
 
         let data = loadData();
@@ -1337,7 +1478,9 @@
                         gufengSurnames: parsed.gufengSurnames || [...DEFAULT_DATA.gufengSurnames],
                         gufengSecondChars: parsed.gufengSecondChars || [...DEFAULT_DATA.gufengSecondChars],
                         gufengThirdChars: parsed.gufengThirdChars || [...DEFAULT_DATA.gufengThirdChars],
-                        gufengFixedNames: parsed.gufengFixedNames || [...DEFAULT_DATA.gufengFixedNames]
+                        gufengFixedNames: parsed.gufengFixedNames || [...DEFAULT_DATA.gufengFixedNames],
+                        sanguoSurnames: parsed.sanguoSurnames || [...DEFAULT_DATA.sanguoSurnames],
+                        sanguoGiven: parsed.sanguoGiven || [...DEFAULT_DATA.sanguoGiven]
                     };
                 }
             } catch (e) {}
@@ -1349,7 +1492,9 @@
                 gufengSurnames: [...DEFAULT_DATA.gufengSurnames],
                 gufengSecondChars: [...DEFAULT_DATA.gufengSecondChars],
                 gufengThirdChars: [...DEFAULT_DATA.gufengThirdChars],
-                gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames]
+                gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames],
+                sanguoSurnames: [...DEFAULT_DATA.sanguoSurnames],
+                sanguoGiven: [...DEFAULT_DATA.sanguoGiven]
             };
         }
 
@@ -1367,6 +1512,7 @@
         let fixedSurname = '';
         let fixedChar = '';
         let fixedCharPosition = 'middle';
+        let lastResults = [];
 
         // ============================================================
         //  姓氏权重（通用模式）
@@ -1395,19 +1541,53 @@
         };
         const DEFAULT_WEIGHT = 10;
 
+        const gufengSurnameWeights = {
+            '苏': 100,
+            '沈': 95,
+            '顾': 90,
+            '林': 85,
+            '萧': 80,
+            '陆': 70,
+            '江': 65,
+            '温': 60,
+            '白': 55,
+            '叶': 50,
+            '柳': 45,
+            '花': 40,
+            '云': 35,
+            '水': 30,
+            '月': 25,
+            '蓝': 20,
+            '兰': 15
+        };
+        const GUFENG_DEFAULT_WEIGHT = 5;
+
         function getWeightedSurname() {
             if (fixedSurname) {
                 return fixedSurname;
             }
-            const surnamePool = currentStyle === 'gufeng' ? data.gufengSurnames : data.surnames;
-            const weightedList = [];
-            for (const surname of surnamePool) {
-                const weight = surnameWeights[surname] || DEFAULT_WEIGHT;
-                for (let i = 0; i < weight; i++) {
-                    weightedList.push(surname);
+            
+            if (currentStyle === 'gufeng') {
+                const surnamePool = data.gufengSurnames;
+                const weightedList = [];
+                for (const surname of surnamePool) {
+                    const weight = gufengSurnameWeights[surname] || GUFENG_DEFAULT_WEIGHT;
+                    for (let i = 0; i < weight; i++) {
+                        weightedList.push(surname);
+                    }
                 }
+                return weightedList[Math.floor(Math.random() * weightedList.length)];
+            } else {
+                const surnamePool = data.surnames;
+                const weightedList = [];
+                for (const surname of surnamePool) {
+                    const weight = surnameWeights[surname] || DEFAULT_WEIGHT;
+                    for (let i = 0; i < weight; i++) {
+                        weightedList.push(surname);
+                    }
+                }
+                return weightedList[Math.floor(Math.random() * weightedList.length)];
             }
-            return weightedList[Math.floor(Math.random() * weightedList.length)];
         }
 
         // ============================================================
@@ -1434,28 +1614,25 @@
         }
 
         // ============================================================
-        //  古风女性生成逻辑（单字:双字 = 1:9）
+        //  古风女性生成逻辑（单字:双字:固定搭配 = 1:7:2）
         // ============================================================
         function generateGuFengName() {
             const surname = getWeightedSurname();
             const secondPool = data.gufengSecondChars;
             const thirdPool = data.gufengThirdChars;
 
-            // 单字名：随机取1个字（10%概率）
             if (currentMode === 'single' || (currentMode === 'random' && getRandomInt(1, 10) === 1)) {
                 const allChars = secondPool.concat(thirdPool);
                 const char = allChars[Math.floor(Math.random() * allChars.length)];
                 return surname + char;
             }
 
-            // 双字名：随机取2个字（90%概率，包括 double 模式和 random 模式）
-            if (currentMode === 'double' || (currentMode === 'random' && getRandomInt(1, 100) <= 90)) {
+            if (currentMode === 'double' || (currentMode === 'random' && getRandomInt(1, 100) <= 80)) {
                 const second = secondPool[Math.floor(Math.random() * secondPool.length)];
                 const third = thirdPool[Math.floor(Math.random() * thirdPool.length)];
                 return applyFixedChar(surname, second, third);
             }
 
-            // 固定搭配：10%概率（仅在 random 模式下）
             if (data.gufengFixedNames.length === 0) {
                 const second = secondPool[Math.floor(Math.random() * secondPool.length)];
                 const third = thirdPool[Math.floor(Math.random() * thirdPool.length)];
@@ -1478,7 +1655,6 @@
             } else if (currentStyle === 'gufeng') {
                 return generateGuFengName();
             } else {
-                // 通用模式
                 if (currentMode === 'single') {
                     const surname = getWeightedSurname();
                     const allChars = data.secondChars.concat(data.thirdChars);
@@ -1489,7 +1665,6 @@
                     const third = getRandomElement(data.thirdChars);
                     return applyFixedChar(surname, second, third);
                 } else {
-                    // random: 70% 双字, 20% 固定搭配, 10% 单字
                     const roll = getRandomInt(1, 100);
                     if (roll <= 70) {
                         const surname = getWeightedSurname();
@@ -1566,12 +1741,13 @@
         const fixedSection = document.getElementById('fixedSection');
         const modeGroup = document.getElementById('modeGroup');
         const modeLabel = document.getElementById('modeLabel');
+        const customCountInput = document.getElementById('customCountInput');
 
         function renderAll() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isSanGuo = currentStyle === 'sanguo';
 
             if (isGuFeng) {
-                // 古风女性模式：显示古风字库（可编辑）
                 renderTags(surnameContainer, data.gufengSurnames, 'gufeng_surname');
                 renderTags(secondContainer, data.gufengSecondChars, 'gufeng_second');
                 renderTags(thirdContainer, data.gufengThirdChars, 'gufeng_third');
@@ -1581,8 +1757,17 @@
                 secondCount.textContent = data.gufengSecondChars.length;
                 thirdCount.textContent = data.gufengThirdChars.length;
                 fixedCount.textContent = data.gufengFixedNames.length;
+            } else if (isSanGuo) {
+                renderTags(surnameContainer, data.sanguoSurnames, 'sanguo_surname');
+                renderTags(secondContainer, data.sanguoGiven, 'sanguo_given');
+                renderTags(thirdContainer, [], 'sanguo_third');
+                renderTags(fixedContainer, [], 'sanguo_fixed');
+
+                surnameCount.textContent = data.sanguoSurnames.length;
+                secondCount.textContent = data.sanguoGiven.length;
+                thirdCount.textContent = 0;
+                fixedCount.textContent = 0;
             } else {
-                // 其他模式：显示通用字库
                 renderTags(surnameContainer, data.surnames, 'surname');
                 renderTags(secondContainer, data.secondChars, 'second');
                 renderTags(thirdContainer, data.thirdChars, 'third');
@@ -1626,12 +1811,14 @@
                 panelHint.textContent = '🫅 明朝宗室风格下字库管理不可用';
             } else if (isSanGuo) {
                 styleHint.textContent = '⚔️ 三国两晋';
-                fixedSection.classList.add('hidden');
+                fixedSection.classList.remove('hidden');
                 modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.add('disabled'));
                 modeLabel.textContent = '模 式（三国两晋下固定格式）';
-                libPanel.classList.add('hidden');
-                panelHint.classList.add('show');
-                panelHint.textContent = '⚔️ 三国两晋风格下字库管理不可用';
+                libPanel.classList.remove('hidden');
+                panelHint.classList.remove('show');
+                document.getElementById('libSecond').querySelector('.lib-label span:first-child').textContent = '📝 名字';
+                document.getElementById('libThird').style.display = 'none';
+                document.getElementById('libFixed').style.display = 'none';
             } else if (isGuFeng) {
                 styleHint.textContent = '🌸 古风女性';
                 fixedSection.classList.remove('hidden');
@@ -1639,6 +1826,9 @@
                 modeLabel.textContent = '模 式';
                 libPanel.classList.remove('hidden');
                 panelHint.classList.remove('show');
+                document.getElementById('libSecond').querySelector('.lib-label span:first-child').textContent = '📝 第二字';
+                document.getElementById('libThird').style.display = '';
+                document.getElementById('libFixed').style.display = '';
             } else {
                 styleHint.textContent = '自由组合';
                 fixedSection.classList.remove('hidden');
@@ -1646,6 +1836,9 @@
                 modeLabel.textContent = '模 式';
                 libPanel.classList.remove('hidden');
                 panelHint.classList.remove('show');
+                document.getElementById('libSecond').querySelector('.lib-label span:first-child').textContent = '📝 第二字';
+                document.getElementById('libThird').style.display = '';
+                document.getElementById('libFixed').style.display = '';
             }
 
             updateStatusHint();
@@ -1666,9 +1859,13 @@
             }
 
             if (isSanGuo) {
-                statusHint.textContent = '三国两晋：姓氏 + 名（带权重）';
-                fixedStatus.textContent = '（三国两晋风格下固定姓氏不可用）';
-                fixedStatus.className = 'fixed-status';
+                let hint = '三国两晋：姓氏 + 名（带权重）';
+                if (fixedSurname) {
+                    hint += ' | 固定姓氏：' + fixedSurname;
+                }
+                statusHint.textContent = hint;
+                fixedStatus.textContent = fixedSurname ? '✅ 已固定：' + fixedSurname : '未设置固定姓氏';
+                fixedStatus.className = fixedSurname ? 'fixed-status active' : 'fixed-status';
                 fixedCharStatus.textContent = '（三国两晋风格下固定字不可用）';
                 fixedCharStatus.className = 'fixed-char-status';
                 return;
@@ -1678,7 +1875,7 @@
                 const modeMap = {
                     'single': '单字名',
                     'double': '双字名',
-                    'random': '随机'
+                    'random': '随机（10%单字 + 70%双字 + 20%固定搭配）'
                 };
                 let hint = '当前模式：' + (modeMap[currentMode] || '随机');
                 if (fixedSurname) {
@@ -1699,7 +1896,7 @@
             const modeMap = {
                 'single': '单字名',
                 'double': '双字名',
-                'random': '随机'
+                'random': '随机（70%双字 + 20%固定搭配 + 10%单字）'
             };
             let hint = '当前模式：' + (modeMap[currentMode] || '随机');
             if (fixedSurname) {
@@ -1733,6 +1930,7 @@
         //  显示结果
         // ============================================================
         function showResults(items) {
+            lastResults = items;
             if (!items || items.length === 0) {
                 resultGrid.innerHTML = '<div class="result-empty">点击左侧按钮生成名字</div>';
                 resultBadge.textContent = '0 个';
@@ -1768,10 +1966,66 @@
         }
 
         // ============================================================
+        //  导出功能
+        // ============================================================
+        function getResultsAsText() {
+            if (!lastResults || lastResults.length === 0) return '';
+            return lastResults.map(function(item) {
+                if (typeof item === 'object' && item.name) {
+                    return item.name;
+                }
+                return item;
+            }).join('\n');
+        }
+
+        function exportTxt() {
+            const text = getResultsAsText();
+            if (!text) {
+                alert('请先生成名字');
+                return;
+            }
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '名字列表.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportCsv() {
+            const text = getResultsAsText();
+            if (!text) {
+                alert('请先生成名字');
+                return;
+            }
+            const csvContent = '\ufeff' + text.split('\n').join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '名字列表.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function copyText() {
+            const text = getResultsAsText();
+            if (!text) {
+                alert('请先生成名字');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(function() {
+                alert('已复制到剪贴板！');
+            }).catch(function() {
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        // ============================================================
         //  增删操作
         // ============================================================
         function deleteItem(type, index) {
-            const isGuFeng = type.startsWith('gufeng_');
             const keyMap = {
                 'surname': 'surnames',
                 'second': 'secondChars',
@@ -1780,7 +2034,9 @@
                 'gufeng_surname': 'gufengSurnames',
                 'gufeng_second': 'gufengSecondChars',
                 'gufeng_third': 'gufengThirdChars',
-                'gufeng_fixed': 'gufengFixedNames'
+                'gufeng_fixed': 'gufengFixedNames',
+                'sanguo_surname': 'sanguoSurnames',
+                'sanguo_given': 'sanguoGiven'
             };
             const key = keyMap[type];
             if (!key) return;
@@ -1790,7 +2046,15 @@
 
         function addSurname() {
             const isGuFeng = currentStyle === 'gufeng';
-            const pool = isGuFeng ? data.gufengSurnames : data.surnames;
+            const isSanGuo = currentStyle === 'sanguo';
+            let pool;
+            if (isGuFeng) {
+                pool = data.gufengSurnames;
+            } else if (isSanGuo) {
+                pool = data.sanguoSurnames;
+            } else {
+                pool = data.surnames;
+            }
             const val = surnameInput.value.trim();
             if (!val) return alert('请输入姓氏');
             if (val.length > 1) return alert('姓氏只能输入一个字');
@@ -1802,10 +2066,22 @@
 
         function addSecond() {
             const isGuFeng = currentStyle === 'gufeng';
-            const pool = isGuFeng ? data.gufengSecondChars : data.secondChars;
+            const isSanGuo = currentStyle === 'sanguo';
+            let pool;
+            if (isGuFeng) {
+                pool = data.gufengSecondChars;
+            } else if (isSanGuo) {
+                pool = data.sanguoGiven;
+            } else {
+                pool = data.secondChars;
+            }
             const val = secondInput.value.trim();
             if (!val) return alert('请输入一个字');
-            if (val.length > 1) return alert('只能输入一个字');
+            if (isSanGuo) {
+                if (val.length > 2) return alert('最多两个字');
+            } else {
+                if (val.length > 1) return alert('只能输入一个字');
+            }
             if (pool.includes(val)) return alert('该字已存在');
             pool.push(val);
             secondInput.value = '';
@@ -1814,6 +2090,11 @@
 
         function addThird() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isSanGuo = currentStyle === 'sanguo';
+            if (isSanGuo) {
+                alert('三国两晋模式下无需第三字');
+                return;
+            }
             const pool = isGuFeng ? data.gufengThirdChars : data.thirdChars;
             const val = thirdInput.value.trim();
             if (!val) return alert('请输入一个字');
@@ -1826,6 +2107,11 @@
 
         function addFixed() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isSanGuo = currentStyle === 'sanguo';
+            if (isSanGuo) {
+                alert('三国两晋模式下无需固定搭配');
+                return;
+            }
             const pool = isGuFeng ? data.gufengFixedNames : data.fixedNames;
             const val = fixedInput.value.trim();
             if (!val) return alert('请输入二字名');
@@ -1851,7 +2137,7 @@
         //  固定姓氏
         // ============================================================
         function confirmSurname() {
-            if (currentStyle === 'ming' || currentStyle === 'sanguo') {
+            if (currentStyle === 'ming') {
                 alert('当前风格下不支持固定姓氏');
                 return;
             }
@@ -1932,7 +2218,7 @@
         // ============================================================
         styleSelect.addEventListener('change', function() {
             currentStyle = this.value;
-            if (currentStyle === 'ming' || currentStyle === 'sanguo') {
+            if (currentStyle === 'ming') {
                 fixedSurname = '';
                 fixedSurnameInput.value = '';
                 fixedChar = '';
@@ -1970,7 +2256,9 @@
                 gufengSurnames: [...DEFAULT_DATA.gufengSurnames],
                 gufengSecondChars: [...DEFAULT_DATA.gufengSecondChars],
                 gufengThirdChars: [...DEFAULT_DATA.gufengThirdChars],
-                gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames]
+                gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames],
+                sanguoSurnames: [...DEFAULT_DATA.sanguoSurnames],
+                sanguoGiven: [...DEFAULT_DATA.sanguoGiven]
             };
             renderAll();
             fixedSurname = '';
@@ -2006,6 +2294,16 @@
         document.getElementById('btnGen50').addEventListener('click', function() {
             generateAndShow(50);
         });
+        document.getElementById('btnGenCustom').addEventListener('click', function() {
+            const count = parseInt(customCountInput.value) || 0;
+            if (count < 1) return alert('请输入大于0的数字');
+            if (count > 5000) return alert('最多生成5000个');
+            generateAndShow(count);
+        });
+
+        document.getElementById('btnExportTxt').addEventListener('click', exportTxt);
+        document.getElementById('btnExportCsv').addEventListener('click', exportCsv);
+        document.getElementById('btnCopy').addEventListener('click', copyText);
 
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space' || e.key === 'Enter') {
@@ -2022,9 +2320,10 @@
         showResults([]);
 
         console.log('✅ 字库管理已加载！');
-        console.log('✅ 通用模式已就绪，明朝宗室模式已就绪，三国两晋模式已就绪，古风女性模式已就绪！');
-        console.log('✅ 古风女性模式：字库可编辑，单字:双字:固定搭配 = 1:7:2');
-        console.log('✅ 切换风格下拉菜单体验不同生成逻辑。');
+        console.log('✅ 所有模式已就绪！');
+        console.log('✅ 导出功能已就绪！');
+        console.log('✅ 自定义数量生成已就绪！');
+        console.log('✅ 三国两晋模式支持固定姓氏和字库编辑！');
     </script>
 </body>
 </html>
