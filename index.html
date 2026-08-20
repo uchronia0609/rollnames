@@ -1811,7 +1811,7 @@
                 panelHint.classList.add('show');
                 panelHint.textContent = '🫅 明朝宗室风格下字库管理不可用';
             } else if (isSanGuo) {
-                styleHint.textContent = '⚔️ 三国两晋';
+                styleHint.textContent = '⚔️ 蒸蒸日上';
                 fixedSection.classList.remove('hidden');
                 modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.add('disabled'));
                 modeLabel.textContent = '模 式（三国两晋下固定格式）';
@@ -1860,7 +1860,7 @@
             }
 
             if (isSanGuo) {
-                let hint = '三国两晋：姓氏 + 名（带权重）';
+                let hint = '三国两晋：姓氏 + 名字';
                 if (fixedSurname) {
                     hint += ' | 固定姓氏：' + fixedSurname;
                 }
