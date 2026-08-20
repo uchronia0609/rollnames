@@ -344,7 +344,6 @@
             color: #4a8a7a;
         }
 
-        /* ✅ 修改：快速生成按钮行 - 三个小正方形按钮横排 */
         .quick-gen-row {
             display: flex;
             gap: 8px;
@@ -394,7 +393,7 @@
         }
 
         .btn-gen-small .count-label {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             opacity: 0.9;
             display: block;
         }
@@ -573,7 +572,7 @@
             color: #b8a08a;
             font-size: 0.9rem;
             text-align: center;
-            padding: 450px 0 0px 0; 
+            padding: 450px 0 50px 0;
             letter-spacing: 2px;
             font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
             grid-column: 1 / -1;
@@ -1040,9 +1039,10 @@
             <div class="style-select-row">
                 <select id="styleSelect">
                     <option value="general">通用</option>
-                    <option value="ming">明朝宗室</option>
-                    <option value="sanguo">三国两晋</option>
                     <option value="gufeng">古风女性</option>
+                    <option value="gufeng_male">古风男性</option>
+                    <option value="sanguo">三国两晋</option>
+                    <option value="ming">明朝宗室</option>
                 </select>
                 <span class="style-hint" id="styleHint">自由组合</span>
             </div>
@@ -1080,7 +1080,6 @@
 
             <div style="flex:1; min-height:4px;"></div>
 
-            <!-- ✅ 修改：三个小正方形按钮横排 -->
             <div class="quick-gen-row">
                 <button class="btn-gen-small" id="btnGen1">
                     <span class="icon">生成</span>
@@ -1216,6 +1215,13 @@
             '伊', '歆', '娜', '栗', '姣', '薇', '懿', '昀', '荣', '绘', '琬',
             '艺', '芯', '娟', '书', '淑', '莎', '奕', '红', '榕', '韶', '菀',
             '亦', '馨', '妮', '美', '菊', '以', '筠', '含', '华', '绾'
+        ];
+
+        // ============================================================
+        //  古风男性字库（默认数据，可编辑）
+        // ============================================================
+        const GU_FENG_MALE_DEFAULT_CHARS = [
+            '宸', '轩', '宇', '泽', '昊', '睿', '辰', '奕', '霖', '恒', '煜', '瑾', '瑜', '璟', '珩', '瑞', '霆', '霁', '昂', '昱', '晟', '曜', '明', '宣', '恺', '恪', '慎', '诚', '谦', '弘', '毅', '卓', '越', '俊', '杰', '博', '文', '哲', '英', '华', '翰', '飞', '鹏', '程', '云', '霄', '沧', '溟', '浩', '然', '琪', '翊', '昀', '璋', '柏', '松', '风', '龙', '虎', '彪', '豹', '麟', '凤', '翔', '鸿', '鹄', '鹤', '鸾', '鲲', '扶', '摇', '凌', '御', '临', '渊', '岳', '峰', '岚', '川', '流', '沛', '润', '泓', '灏', '清', '澈', '澄', '净', '朗', '映', '晖', '旭', '晨', '暮', '霜', '雪', '寒', '冰', '玉', '金', '银', '铁', '钢', '坚', '刚', '强', '韧', '劲', '健', '壮', '伟', '岸', '崇', '峻', '穆', '典', '雅', '正', '直', '端', '方', '圆', '通', '达', '观', '照', '仰', '慕', '瞻', '品', '身', '扬', '辉', '春', '仁', '聪', '世', '彬', '舜', '珠', '静', '生', '涵', '载', '成', '瑶', '筱', '琼', '代', '宛', '玲', '昌', '佩', '淑', '芳', '曼', '琍', '久', '琳', '智', '先', '素', '希', '乾', '美', '兰', '安', '丰', '蔚', '群', '福', '仙', '良', '初', '淮', '远', '鋆', '微', '孔', '坚', '仲', '贤', '德', '贞', '固', '敏', '镇', '有', '纲', '茂', '伦', '永', '秋', '郁', '九', '本', '贻', '谋', '志', '民', '公', '伟', '年', '宜', '骏', '恕', '煌', '启', '模', '其', '荣', '庭', '培', '礼', '国', '珍', '致', '和', '家', '槐', '康', '开', '新', '源', '极', '朝', '宽', '宏', '高', '禧', '光', '裕', '祥', '燮', '元', '万', '棻', '伯', '髙', '少', '祀', '湘', '乃', '存', '砚', '耕', '钧', '大', '宁', '奎', '蜀', '铮', '修', '秦', '南', '克', '义', '宗', '道', '伯', '直', '用', '长', '村', '隆', '昆', '树', '梁', '堉', '恩', '造', '海', '涛', '思', '际', '绍', '东', '秉', '绪', '亨', '洪', '醒', '愚', '陶', '立', '占', '鳌', '儒', '林', '之', '彦', '曾', '孚', '纯', '熙', '颖', '子', '广', '笃', '齐', '亮', '尧', '果', '汝', '性', '孝', '机', '承', '勋', '烺', '楠', '锴', '疆', '灼', '炘', '燎', '力', '时', '联', '天', '兴', '第', '垓', '常', '达', '煊', '子', '唐', '铨', '书', '勤', '堃', '巴', '尚', '卿', '学', '定', '洋', '忠', '润', '祖', '熔', '注', '发', '振', '友', '孟', '玺', '逖', '心', '审', '持', '相', '灿', '厚', '剑', '权', '士', '附', '普', '举', '炤', '汉', '馗', '钦', '聿', '淳', '邦', '泽', '黎', '祺', '顺', '恭', '复', '庆', '爵', '体', '戎', '重', '敬', '懋', '建', '佐', '平', '映', '植', '大', '荪', '君', '馥', '谦', '武', '叔', '淋', '泉', '斗', '佑', '为', '仿', '小', '翼', '浦', '霈', '应', '麟', '烈', '传', '河', '楷', '吉', '揆', '骙', '循', '科', '余', '垣'
         ];
 
         // ============================================================
@@ -1460,6 +1466,18 @@
             gufengSecondChars: [...GU_FENG_DEFAULT_CHARS],
             gufengThirdChars: [...GU_FENG_DEFAULT_CHARS],
             gufengFixedNames: ['子涵', '梓轩', '俊杰', '佳怡', '欣怡', '雨桐', '诗涵', '梦瑶', '若曦', '一诺'],
+            gufengMaleSurnames: ['陆', '明', '李', '孙', '钱', '苏', '郑', '周', '吴', '褚', '张', '王', '冯', '蒋', '何', '沈', '陈',
+                '卫', '孔', '秦', '许', '韩', '朱', '葛', '魏', '杨', '吕', '范', '乐', '曹', '林', '金', '谢', '严', '水', '薛', '云',
+                '喻', '华', '窦', '杜', '潘', '柏', '陶', '裴', '鲁', '马', '姜', '阮', '方', '苗', '彭', '花', '兰', '柳', '俞', '郎',
+                '丰', '史', '安', '任', '韦', '廉', '顾', '常', '袁', '雷', '舒', '傅', '章', '费', '汤', '高', '姚', '唐', '罗', '夏',
+                '邵', '贺', '滕', '卞', '江', '穆', '郝', '殷', '伍', '郭', '萧', '时', '毕', '汪', '元', '齐', '余', '于', '谈', '和',
+                '康', '宋', '孟', '平', '戴', '纪', '董', '黄', '梁', '毛', '熊', '蓝', '田', '狄', '项', '凌', '盛', '成', '蔡', '颜',
+                '樊', '闵', '娄', '梅', '胡', '祁', '童', '钟', '万', '霍', '邱', '徐', '卢', '贾', '管', '宗', '路', '虞', '解', '骆',
+                '应', '房', '莫', '宣', '邓', '左', '石', '郁', '程', '桓'
+            ],
+            gufengMaleSecondChars: [...GU_FENG_MALE_DEFAULT_CHARS],
+            gufengMaleThirdChars: [...GU_FENG_MALE_DEFAULT_CHARS],
+            gufengMaleFixedNames: ['子轩', '浩然', '俊杰', '宇轩', '睿哲', '博文', '明轩', '天宇', '泽宇', '奕辰'],
             sanguoSurnames: [...SAN_GUO_DEFAULT_SURNAMES],
             sanguoGiven: [...SAN_GUO_DEFAULT_GIVEN]
         };
@@ -1480,6 +1498,10 @@
                         gufengSecondChars: parsed.gufengSecondChars || [...DEFAULT_DATA.gufengSecondChars],
                         gufengThirdChars: parsed.gufengThirdChars || [...DEFAULT_DATA.gufengThirdChars],
                         gufengFixedNames: parsed.gufengFixedNames || [...DEFAULT_DATA.gufengFixedNames],
+                        gufengMaleSurnames: parsed.gufengMaleSurnames || [...DEFAULT_DATA.gufengMaleSurnames],
+                        gufengMaleSecondChars: parsed.gufengMaleSecondChars || [...DEFAULT_DATA.gufengMaleSecondChars],
+                        gufengMaleThirdChars: parsed.gufengMaleThirdChars || [...DEFAULT_DATA.gufengMaleThirdChars],
+                        gufengMaleFixedNames: parsed.gufengMaleFixedNames || [...DEFAULT_DATA.gufengMaleFixedNames],
                         sanguoSurnames: parsed.sanguoSurnames || [...DEFAULT_DATA.sanguoSurnames],
                         sanguoGiven: parsed.sanguoGiven || [...DEFAULT_DATA.sanguoGiven]
                     };
@@ -1494,6 +1516,10 @@
                 gufengSecondChars: [...DEFAULT_DATA.gufengSecondChars],
                 gufengThirdChars: [...DEFAULT_DATA.gufengThirdChars],
                 gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames],
+                gufengMaleSurnames: [...DEFAULT_DATA.gufengMaleSurnames],
+                gufengMaleSecondChars: [...DEFAULT_DATA.gufengMaleSecondChars],
+                gufengMaleThirdChars: [...DEFAULT_DATA.gufengMaleThirdChars],
+                gufengMaleFixedNames: [...DEFAULT_DATA.gufengMaleFixedNames],
                 sanguoSurnames: [...DEFAULT_DATA.sanguoSurnames],
                 sanguoGiven: [...DEFAULT_DATA.sanguoGiven]
             };
@@ -1519,47 +1545,16 @@
         //  姓氏权重（通用模式）
         // ============================================================
         const surnameWeights = {
-            '王': 100,
-            '李': 93,
-            '张': 89,
-            '刘': 68,
-            '陈': 64,
-            '杨': 44,
-            '黄': 32,
-            '赵': 27,
-            '徐': 27,
-            '吴': 26,
-            '周': 25,
-            '马': 25,
-            '孙': 26,
-            '胡': 22,
-            '朱': 21,
-            '郭': 20,
-            '何': 20,
-            '罗': 19,
-            '高': 18,
-            '林': 18
+            '王': 100, '李': 93, '张': 89, '刘': 68, '陈': 64, '杨': 44, '黄': 32, '赵': 27,
+            '徐': 27, '吴': 26, '周': 25, '马': 25, '孙': 26, '胡': 22, '朱': 21, '郭': 20,
+            '何': 20, '罗': 19, '高': 18, '林': 18
         };
         const DEFAULT_WEIGHT = 10;
 
         const gufengSurnameWeights = {
-            '苏': 100,
-            '沈': 95,
-            '顾': 90,
-            '林': 85,
-            '萧': 80,
-            '陆': 70,
-            '江': 65,
-            '温': 60,
-            '白': 55,
-            '叶': 50,
-            '柳': 45,
-            '花': 40,
-            '云': 35,
-            '水': 30,
-            '月': 25,
-            '蓝': 20,
-            '兰': 15
+            '苏': 100, '沈': 95, '顾': 90, '林': 85, '萧': 80, '陆': 70, '江': 65,
+            '温': 60, '白': 55, '叶': 50, '柳': 45, '花': 40, '云': 35, '水': 30,
+            '月': 25, '蓝': 20, '兰': 15
         };
         const GUFENG_DEFAULT_WEIGHT = 5;
 
@@ -1570,6 +1565,16 @@
             
             if (currentStyle === 'gufeng') {
                 const surnamePool = data.gufengSurnames;
+                const weightedList = [];
+                for (const surname of surnamePool) {
+                    const weight = gufengSurnameWeights[surname] || GUFENG_DEFAULT_WEIGHT;
+                    for (let i = 0; i < weight; i++) {
+                        weightedList.push(surname);
+                    }
+                }
+                return weightedList[Math.floor(Math.random() * weightedList.length)];
+            } else if (currentStyle === 'gufeng_male') {
+                const surnamePool = data.gufengMaleSurnames;
                 const weightedList = [];
                 for (const surname of surnamePool) {
                     const weight = gufengSurnameWeights[surname] || GUFENG_DEFAULT_WEIGHT;
@@ -1615,7 +1620,7 @@
         }
 
         // ============================================================
-        //  古风女性生成逻辑
+        //  古风女性生成逻辑（单字:双字:固定搭配 = 1:7:2）
         // ============================================================
         function generateGuFengName() {
             const surname = getWeightedSurname();
@@ -1646,6 +1651,37 @@
         }
 
         // ============================================================
+        //
+        // ============================================================
+        function generateGuFengMaleName() {
+            const surname = getWeightedSurname();
+            const secondPool = data.gufengMaleSecondChars;
+            const thirdPool = data.gufengMaleThirdChars;
+
+            if (currentMode === 'single' || (currentMode === 'random' && getRandomInt(1, 10) === 1)) {
+                const allChars = secondPool.concat(thirdPool);
+                const char = allChars[Math.floor(Math.random() * allChars.length)];
+                return surname + char;
+            }
+
+            if (currentMode === 'double' || (currentMode === 'random' && getRandomInt(1, 100) <= 95)) {
+                const second = secondPool[Math.floor(Math.random() * secondPool.length)];
+                const third = thirdPool[Math.floor(Math.random() * thirdPool.length)];
+                return applyFixedChar(surname, second, third);
+            }
+
+            if (data.gufengMaleFixedNames.length === 0) {
+                const second = secondPool[Math.floor(Math.random() * secondPool.length)];
+                const third = thirdPool[Math.floor(Math.random() * thirdPool.length)];
+                return applyFixedChar(surname, second, third);
+            }
+            const fixedName = data.gufengMaleFixedNames[Math.floor(Math.random() * data.gufengMaleFixedNames.length)];
+            const second = fixedName[0];
+            const third = fixedName[1];
+            return applyFixedChar(surname, second, third);
+        }
+
+        // ============================================================
         //  主生成入口
         // ============================================================
         function generateName() {
@@ -1655,6 +1691,8 @@
                 return generateSanGuoName();
             } else if (currentStyle === 'gufeng') {
                 return generateGuFengName();
+            } else if (currentStyle === 'gufeng_male') {
+                return generateGuFengMaleName();
             } else {
                 if (currentMode === 'single') {
                     const surname = getWeightedSurname();
@@ -1667,7 +1705,7 @@
                     return applyFixedChar(surname, second, third);
                 } else {
                     const roll = getRandomInt(1, 100);
-                    if (roll <= 70) {
+                    if (roll <= 85) {
                         const surname = getWeightedSurname();
                         const second = getRandomElement(data.secondChars);
                         const third = getRandomElement(data.thirdChars);
@@ -1746,6 +1784,7 @@
 
         function renderAll() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isGuFengMale = currentStyle === 'gufeng_male';
             const isSanGuo = currentStyle === 'sanguo';
 
             if (isGuFeng) {
@@ -1758,6 +1797,16 @@
                 secondCount.textContent = data.gufengSecondChars.length;
                 thirdCount.textContent = data.gufengThirdChars.length;
                 fixedCount.textContent = data.gufengFixedNames.length;
+            } else if (isGuFengMale) {
+                renderTags(surnameContainer, data.gufengMaleSurnames, 'gufeng_male_surname');
+                renderTags(secondContainer, data.gufengMaleSecondChars, 'gufeng_male_second');
+                renderTags(thirdContainer, data.gufengMaleThirdChars, 'gufeng_male_third');
+                renderTags(fixedContainer, data.gufengMaleFixedNames, 'gufeng_male_fixed');
+
+                surnameCount.textContent = data.gufengMaleSurnames.length;
+                secondCount.textContent = data.gufengMaleSecondChars.length;
+                thirdCount.textContent = data.gufengMaleThirdChars.length;
+                fixedCount.textContent = data.gufengMaleFixedNames.length;
             } else if (isSanGuo) {
                 renderTags(surnameContainer, data.sanguoSurnames, 'sanguo_surname');
                 renderTags(secondContainer, data.sanguoGiven, 'sanguo_given');
@@ -1801,6 +1850,7 @@
             const isMing = currentStyle === 'ming';
             const isSanGuo = currentStyle === 'sanguo';
             const isGuFeng = currentStyle === 'gufeng';
+            const isGuFengMale = currentStyle === 'gufeng_male';
 
             if (isMing) {
                 styleHint.textContent = '🫅 朱氏皇室';
@@ -1811,7 +1861,7 @@
                 panelHint.classList.add('show');
                 panelHint.textContent = '🫅 明朝宗室风格下字库管理不可用';
             } else if (isSanGuo) {
-                styleHint.textContent = '⚔️ 蒸蒸日上';
+                styleHint.textContent = '⚔️ 三国两晋';
                 fixedSection.classList.remove('hidden');
                 modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.add('disabled'));
                 modeLabel.textContent = '模 式（三国两晋下固定格式）';
@@ -1822,6 +1872,16 @@
                 document.getElementById('libFixed').style.display = 'none';
             } else if (isGuFeng) {
                 styleHint.textContent = '🌸 古风女性';
+                fixedSection.classList.remove('hidden');
+                modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('disabled'));
+                modeLabel.textContent = '模 式';
+                libPanel.classList.remove('hidden');
+                panelHint.classList.remove('show');
+                document.getElementById('libSecond').querySelector('.lib-label span:first-child').textContent = '📝 第二字';
+                document.getElementById('libThird').style.display = '';
+                document.getElementById('libFixed').style.display = '';
+            } else if (isGuFengMale) {
+                styleHint.textContent = '🎋 古风男性';
                 fixedSection.classList.remove('hidden');
                 modeGroup.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('disabled'));
                 modeLabel.textContent = '模 式';
@@ -1849,6 +1909,7 @@
             const isMing = currentStyle === 'ming';
             const isSanGuo = currentStyle === 'sanguo';
             const isGuFeng = currentStyle === 'gufeng';
+            const isGuFengMale = currentStyle === 'gufeng_male';
 
             if (isMing) {
                 statusHint.textContent = '明朝宗室：固定朱姓，字辈+五行尾字';
@@ -1860,7 +1921,7 @@
             }
 
             if (isSanGuo) {
-                let hint = '三国两晋：姓氏 + 名字';
+                let hint = '三国两晋：姓氏 + 名（带权重）';
                 if (fixedSurname) {
                     hint += ' | 固定姓氏：' + fixedSurname;
                 }
@@ -1872,7 +1933,7 @@
                 return;
             }
 
-            if (isGuFeng) {
+            if (isGuFeng || isGuFengMale) {
                 const modeMap = {
                     'single': '单字名',
                     'double': '双字名',
@@ -1941,7 +2002,7 @@
             const isMingResult = items[0] && typeof items[0] === 'object' && items[0].name !== undefined && items[0].branch !== undefined;
 
             if (isMingResult) {
-                const showLineage = items.length <= 10;
+                const showLineage = items.length <= 5000;
                 resultGrid.innerHTML = items.map(function(item) {
                     let html = '<div class="result-item">';
                     html += '<div class="result-name">' + item.name + '</div>';
@@ -2036,6 +2097,10 @@
                 'gufeng_second': 'gufengSecondChars',
                 'gufeng_third': 'gufengThirdChars',
                 'gufeng_fixed': 'gufengFixedNames',
+                'gufeng_male_surname': 'gufengMaleSurnames',
+                'gufeng_male_second': 'gufengMaleSecondChars',
+                'gufeng_male_third': 'gufengMaleThirdChars',
+                'gufeng_male_fixed': 'gufengMaleFixedNames',
                 'sanguo_surname': 'sanguoSurnames',
                 'sanguo_given': 'sanguoGiven'
             };
@@ -2047,10 +2112,13 @@
 
         function addSurname() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isGuFengMale = currentStyle === 'gufeng_male';
             const isSanGuo = currentStyle === 'sanguo';
             let pool;
             if (isGuFeng) {
                 pool = data.gufengSurnames;
+            } else if (isGuFengMale) {
+                pool = data.gufengMaleSurnames;
             } else if (isSanGuo) {
                 pool = data.sanguoSurnames;
             } else {
@@ -2067,10 +2135,13 @@
 
         function addSecond() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isGuFengMale = currentStyle === 'gufeng_male';
             const isSanGuo = currentStyle === 'sanguo';
             let pool;
             if (isGuFeng) {
                 pool = data.gufengSecondChars;
+            } else if (isGuFengMale) {
+                pool = data.gufengMaleSecondChars;
             } else if (isSanGuo) {
                 pool = data.sanguoGiven;
             } else {
@@ -2091,12 +2162,20 @@
 
         function addThird() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isGuFengMale = currentStyle === 'gufeng_male';
             const isSanGuo = currentStyle === 'sanguo';
             if (isSanGuo) {
                 alert('三国两晋模式下无需第三字');
                 return;
             }
-            const pool = isGuFeng ? data.gufengThirdChars : data.thirdChars;
+            let pool;
+            if (isGuFeng) {
+                pool = data.gufengThirdChars;
+            } else if (isGuFengMale) {
+                pool = data.gufengMaleThirdChars;
+            } else {
+                pool = data.thirdChars;
+            }
             const val = thirdInput.value.trim();
             if (!val) return alert('请输入一个字');
             if (val.length > 1) return alert('只能输入一个字');
@@ -2108,12 +2187,20 @@
 
         function addFixed() {
             const isGuFeng = currentStyle === 'gufeng';
+            const isGuFengMale = currentStyle === 'gufeng_male';
             const isSanGuo = currentStyle === 'sanguo';
             if (isSanGuo) {
                 alert('三国两晋模式下无需固定搭配');
                 return;
             }
-            const pool = isGuFeng ? data.gufengFixedNames : data.fixedNames;
+            let pool;
+            if (isGuFeng) {
+                pool = data.gufengFixedNames;
+            } else if (isGuFengMale) {
+                pool = data.gufengMaleFixedNames;
+            } else {
+                pool = data.fixedNames;
+            }
             const val = fixedInput.value.trim();
             if (!val) return alert('请输入二字名');
             if (val.length !== 2) return alert('固定搭配必须是两个字');
@@ -2258,6 +2345,10 @@
                 gufengSecondChars: [...DEFAULT_DATA.gufengSecondChars],
                 gufengThirdChars: [...DEFAULT_DATA.gufengThirdChars],
                 gufengFixedNames: [...DEFAULT_DATA.gufengFixedNames],
+                gufengMaleSurnames: [...DEFAULT_DATA.gufengMaleSurnames],
+                gufengMaleSecondChars: [...DEFAULT_DATA.gufengMaleSecondChars],
+                gufengMaleThirdChars: [...DEFAULT_DATA.gufengMaleThirdChars],
+                gufengMaleFixedNames: [...DEFAULT_DATA.gufengMaleFixedNames],
                 sanguoSurnames: [...DEFAULT_DATA.sanguoSurnames],
                 sanguoGiven: [...DEFAULT_DATA.sanguoGiven]
             };
@@ -2324,7 +2415,7 @@
         console.log('✅ 所有模式已就绪！');
         console.log('✅ 导出功能已就绪！');
         console.log('✅ 自定义数量生成已就绪！');
-        console.log('✅ 三国两晋模式支持固定姓氏和字库编辑！');
+        console.log('✅ 古风男性模式已就绪！');
     </script>
 </body>
 </html>
