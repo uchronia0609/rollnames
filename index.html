@@ -394,7 +394,7 @@
         }
 
         .btn-gen-small .count-label {
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             opacity: 0.9;
             display: block;
         }
@@ -573,9 +573,10 @@
             color: #b8a08a;
             font-size: 0.9rem;
             text-align: center;
-            padding: 50px 0;
+            padding: 450px 0 0px 0; 
             letter-spacing: 2px;
             font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            grid-column: 1 / -1;
         }
 
         .right-panel {
@@ -1082,16 +1083,16 @@
             <!-- ✅ 修改：三个小正方形按钮横排 -->
             <div class="quick-gen-row">
                 <button class="btn-gen-small" id="btnGen1">
-                    <span class="icon">🎲</span>
-                    <span class="count-label">1</span>
+                    <span class="icon">生成</span>
+                    <span class="count-label">1个</span>
                 </button>
                 <button class="btn-gen-small" id="btnGen10">
-                    <span class="icon">📋</span>
-                    <span class="count-label">10</span>
+                    <span class="icon">生成</span>
+                    <span class="count-label">10个</span>
                 </button>
                 <button class="btn-gen-small" id="btnGen50">
-                    <span class="icon">📋</span>
-                    <span class="count-label">50</span>
+                    <span class="icon">生成</span>
+                    <span class="count-label">50个</span>
                 </button>
             </div>
 
@@ -1614,7 +1615,7 @@
         }
 
         // ============================================================
-        //  古风女性生成逻辑（单字:双字:固定搭配 = 1:7:2）
+        //  古风女性生成逻辑
         // ============================================================
         function generateGuFengName() {
             const surname = getWeightedSurname();
@@ -1627,7 +1628,7 @@
                 return surname + char;
             }
 
-            if (currentMode === 'double' || (currentMode === 'random' && getRandomInt(1, 100) <= 80)) {
+            if (currentMode === 'double' || (currentMode === 'random' && getRandomInt(1, 100) <= 95)) {
                 const second = secondPool[Math.floor(Math.random() * secondPool.length)];
                 const third = thirdPool[Math.floor(Math.random() * thirdPool.length)];
                 return applyFixedChar(surname, second, third);
@@ -1875,7 +1876,7 @@
                 const modeMap = {
                     'single': '单字名',
                     'double': '双字名',
-                    'random': '随机（10%单字 + 70%双字 + 20%固定搭配）'
+                    'random': '随机'
                 };
                 let hint = '当前模式：' + (modeMap[currentMode] || '随机');
                 if (fixedSurname) {
@@ -1896,7 +1897,7 @@
             const modeMap = {
                 'single': '单字名',
                 'double': '双字名',
-                'random': '随机（70%双字 + 20%固定搭配 + 10%单字）'
+                'random': '随机'
             };
             let hint = '当前模式：' + (modeMap[currentMode] || '随机');
             if (fixedSurname) {
